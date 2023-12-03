@@ -1,0 +1,59 @@
+	<a href="#" class="dashboard-responsive-nav-trigger"><i class="fa fa-reorder"></i> Dashboard Navigation</a>
+	
+	<div class="dashboard-nav">
+	<div class="dashboard-nav-inner">
+	{% if session.user_name and session.api_key and session.role_id == 1 %}
+	<ul data-submenu-title="Admin Panel">
+	      <li {% if page.name == "adminpanel" %}class="active"{% endif %}><a href="{{ base_url() }}/admin-panel"><i class="sl sl-icon-rocket"></i> Admin Panel</a></li>
+	      
+	    <li {% if page.name == "settings" %}class="active"{% endif %}><a href="{{ base_url() }}/system-configuration"><i class="sl sl-icon-settings"></i> Site Settings</a></li>
+		{#<li {% if page.name == "timeline" %}class="active"{% endif %}><a href="{{ base_url() }}/timeline"><i class="sl sl-icon-bubbles"></i> Timeline</a></li>#}
+		<li {% if page.name == "manage-documents" %}class="active"{% endif %}><a><i class="sl sl-icon-layers"></i> Manage Documents</a>
+					<ul>
+					<li><a href="{{ base_url() }}/select-document-type"><i class="sl sl-icon-plus"></i> Add New Document</a></li>
+				<li><a href="{{ base_url() }}/manage-documents"><i class="sl sl-icon-plus"></i> View All Documents</a></li>
+				<li><a href="{{ base_url() }}/manage-categories"><i class="sl sl-icon-tag"></i> Manage Categories</a></li>
+				<li><a href="{{ base_url() }}/manage-reviews"><i class="sl sl-icon-bubbles"></i> All Reviews</a></li>
+					</ul>	
+				</li>
+				
+				<li {% if page.name == "manage-membership" %}class="active"{% endif %}><a><i class="sl sl-icon-shield"></i> User Memberships</a>
+					<ul>
+					    <li><a href="{{ base_url() }}/manage-all-subscriptions"><i class="sl sl-icon-wallet"></i> User Subscriptions</a></li>
+						<li><a href="{{ base_url() }}/manage-membership-plans"><i class="sl sl-icon-badge"></i> Membership Plans</a></li>
+						<li><a href="{{ base_url() }}/free-trials-summary"><i class="sl sl-icon-plane"></i> View Free Trials</a></li>
+						<li><a href="{{ base_url() }}/manage-users"><i class="sl sl-icon-people"></i> View All Users</a></li>
+						<li><a href="{{ base_url() }}/create-new-account"><i class="sl sl-icon-plus"></i> Add New User</a></li>
+					</ul>
+				</li>
+				
+				<li {% if page.name == "manage-faqs" %}class="active"{% endif %}><a><i class="sl sl-icon-pin"></i> Manage FAQs</a>
+					<ul>
+					    <li><a href="{{ base_url() }}/manage-faqs"><i class="sl sl-icon-pin"></i> View All FAQs</a></li>
+						<li><a href="{{ base_url() }}/add-faq"><i class="sl sl-icon-plus"></i> Add New FAQ</a></li>
+						<li><a href="{{ base_url() }}/faqs-category-manager"><i class="sl sl-icon-list"></i> FAQ Categorization</a></li>
+					</ul>
+				</li>
+				</ul>
+					{% endif %}
+					
+		<ul data-submenu-title="Welcome Vishal!">
+				<li {% if page.name == "dashboard" %}class="active"{% endif %}><a href="{{ base_url() }}/dashboard"><i class="sl sl-icon-rocket"></i> My Dashboard</a></li>
+				<li {% if page.name == "notifications" %}class="active"{% endif %}><a href="{{ base_url() }}/notifications"><i class="sl sl-icon-bell"></i> Notifications</a></li>
+				<li><a href="{{ base_url() }}/reward-points"><i class="sl sl-icon-wallet"></i> Reward Points</a></li>
+				<li {% if page.name == "referrals" %}class="active"{% endif %}><a href="{{ base_url() }}/referral-codes"><i class="sl sl-icon-rocket"></i> Refer & Earn</a></li>
+				<li {% if page.name == "savedreads" %}class="active"{% endif %}><a href="{{ base_url() }}/saved-reads"><i class="sl im im-icon-Arrow-LeftinCircle"></i> Saved Reads {% if page.num_saves %}	<span class="nav-tag messages">{{page.num_saves}}</span>{% endif %}</a></li>
+				<li {% if page.name == "favourites" %}class="active"{% endif %}><a href="{{ base_url() }}/bookmarks"><i class="sl sl-icon-heart"></i> My Favourites</a></li>
+			</ul>
+					
+
+			<ul data-submenu-title="Account">
+				<li {% if page.name == "profile" %}class="active"{% endif %}><a href="{{ base_url() }}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
+				<li {% if page.name == "my-membership" %}class="active"{% endif %}><a href="{{ base_url() }}/my-subscriptions"><i class="sl sl-icon-shield"></i> Membership</a></li>
+				<li><a href="{{ base_url() }}/logout"><i class="sl sl-icon-power"></i> Logout</a></li>
+			</ul>
+			
+		</div>
+	</div>
+	<!-- Navigation / End -->
+

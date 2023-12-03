@@ -1,0 +1,22 @@
+<div id="listing-reviews" class="listing-section">
+<h3 class="listing-desc-headline margin-top-20 margin-bottom-20">Reviews {% if document.num_reviews > 0 %}
+<span>({{document.num_reviews}})</span>
+{% endif %}</h3>
+
+				<div class="clearfix"></div>
+
+				<!-- Reviews -->
+				<section class="comments listing-reviews">
+
+{% if document.all_reviews|length > 0 %}
+	<ul>
+						{% for row in document.all_reviews %}
+ {% include 'list_items/doc_reviews.twig' %}
+					
+{% endfor %}
+					
+					 </ul>
+{% else %}
+<h5 class="mb-4">No Review Yet. Be the first to review this {{document.doc_type}}.</h5>
+{% endif %}
+</section></div>

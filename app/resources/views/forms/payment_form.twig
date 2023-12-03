@@ -1,0 +1,80 @@
+<!--
+<form action="{{page.paypal.PAYPAL_URL}}" method="post">
+    <input type="hidden" name="business" value="{{page.paypal.PAYPAL_ID}}">
+    <input type="hidden" name="cmd" value="_xclick-subscriptions"> 
+    <input type="hidden" name="item_name" value="{{page.paypal.itemName}}">
+    <input type="hidden" name="item_number" value="{{page.paypal.itemID}}">
+    <input type="hidden" name="currency_code" value="{{page.paypal.PAYPAL_CURRENCY}}">
+    <input type="hidden" name="a3" id="paypalAmt" value="{{page.paypal.priceToPay}}">
+    <input type="hidden" name="p3" id="paypalValid" value="1">
+    <input type="hidden" name="t3" value="Y">
+    <input type="hidden" name="custom" value="{{session.userID}}">
+    <input type="hidden" name="cancel_return" value="{{page.paypal.PAYPAL_CANCEL_URL}}">
+    <input type="hidden" name="return" value="{{page.paypal.PAYPAL_RETURN_URL}}">
+    <input type="hidden" name="notify_url" value="{{page.paypal.PAYPAL_NOTIFY_URL}}">
+    <input class="buy-btn" type="submit" value="Buy Subscription">
+</form>
+-->
+
+
+{% if page.plan_id == 1 %}					
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style="width:100%;text-align:center;">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="T4G9W7WJ9NXE8">
+
+<input type="hidden" name="item_name" value="{{page.paypal.itemName}}">
+<input type="hidden" name="item_number" value="{{page.paypal.itemID}}">
+<input type="hidden" name="user_id" value="{{session.userID}}">
+<input type="hidden" name="custom" value="{{page.ref_code}}">
+
+<input style="width:auto;border:none;margin:0 auto;text-align:center;background-color:transparent;" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+{% endif %}
+    
+{% if page.plan_id == 2 %}					
+<!------------------->
+<div style="text-align:center;margin: 0 auto;display:block;">
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="48LU23FJPRRAC">
+
+<input type="hidden" name="item_name" value="{{page.paypal.itemName}}">
+<input type="hidden" name="item_number" value="{{page.paypal.itemID}}">
+<input type="hidden" name="user_id" value="{{session.userID}}">
+<input type="hidden" name="custom" value="{{page.ref_code}}">
+
+<table style="color:#ffffff;text-align:center;display:inline-block;margin:0 auto;min-width:60%;">
+<tr style="margin-bottom:15px;font-size:18px;font-weight:bold;"><td><input type="hidden" name="on0" value="Subscription Type">Select Subscription Type</td></tr>
+<tr><td><select name="os0">
+
+	<option value="PER MONTH">PER MONTH : $39 USD - monthly</option>
+	<option value="PER YEAR">PER YEAR : $120.00 USD - yearly</option>
+</select> </td></tr>
+</table>
+<input style="margin-top:22px;" type="hidden" name="currency_code" value="USD">
+<input style="margin: 0 auto;display:block;width:auto;border:none;text-align:center;background-color:transparent;" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" style="text-align:center;" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+</div>
+<!-------------------->
+
+<!-------------------
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="PP4RBFPCSWV6C">
+
+<input type="hidden" name="item_name" value="{{page.paypal.itemName}}">
+<input type="hidden" name="item_number" value="{{page.paypal.itemID}}">
+<input type="hidden" name="user_id" value="{{session.userID}}">
+<input type="hidden" name="custom" value="{{page.ref_code}}">
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+------------------>
+
+{% endif %}
+
+
+
+<h4 style="color:#ffffff;text-align:center;">We will take you to paypal to complete this subscription.</h4>

@@ -1,0 +1,80 @@
+{% if session.userID > 0 %}
+ <div id="rating_overlay" style="display:none;border-radius: 3px 3px 0 0;">
+					<div style="padding: 60px; text-align: center;">
+					<img src="{{base_url()}}/images/preloader.gif" style="width:70px;margin:0 auto;"/>
+					<h4 style="margin-top:30px;"><strong>Submitting Review</strong></h4>
+					<h5 style="">Please wait...</h5>
+					</div>				
+					</div>
+<form method="POST" action="{{base_url()}}/documents/reviews" class="login" name="reviewDocumentForm" id="reviewDocumentForm">
+{% if document.is_reviewed %}
+<h3 class="listing-desc-headline margin-bottom-20">Update Review </h3>
+{% else %}
+<h3 class="listing-desc-headline margin-bottom-20">Add Review</h3>
+{% endif %}
+
+<hr>
+<input type="hidden" name="doc_id" id="doc_id" value="{{document.id}}">
+<input type="hidden" name="user_id" id="user_id" value="{{session.userID}}">
+{% if document.is_reviewed %}
+<span class="leave-rating-title">Hi {{session.first_name}}! You reviewed this {{document.doc_type}} {{document.my_review.stars}}/5 on {{document.my_review.date_created}}. </span>
+{% else %}
+<span class="leave-rating-title">Write a review for this {{document.doc_type}}. </span>
+{% endif %}
+	<div class="row">
+	    
+	    
+	    <div class="col-md-6">
+		<label>Rate this {{document.doc_type}}</label>
+			<select class="chosen-select-no-single" name="rating" id="rating" required="required">
+									
+			<option value="5">5 Stars</option>
+			<option value="4">4 Stars </option>
+			<option value="3">3 Stars </option>
+			<option value="2">2 Stars </option>
+			<option value="1">1 Star </option>
+				</select>
+				<p style="color:#555555;font-weight:500;" id="ratingMsg"></p>
+		</div>
+							
+							
+					<!--<div class="col-md-6">
+					    <label>Rate out of 5:</label>
+						<div class="clearfix"></div>
+						<div class="leave-rating margin-bottom-30">
+							<input type="radio" name="rating" id="rating-1" class="bookRating" value="1" {% if document.my_review.stars ==1 %}checked{% endif %}/>
+							<label for="rating-1" class="fa fa-star"></label>
+							<input type="radio" name="rating" id="rating-2" class="bookRating" value="2" {% if document.my_review.stars ==2 %}checked{% endif %}/>
+							<label for="rating-2" class="fa fa-star"></label>
+							<input type="radio" name="rating" id="rating-3" class="bookRating" value="3" {% if document.my_review.stars ==3 %}checked{% endif %}/>
+							<label for="rating-3" class="fa fa-star"></label>
+							<input type="radio" name="rating" id="rating-4" class="bookRating" value="4" {% if document.my_review.stars ==4 %}checked{% endif %}/>
+							<label for="rating-4" class="fa fa-star"></label>
+							<input type="radio" name="rating" id="rating-5" class="bookRating" value="5" {% if document.my_review.stars ==5 %}checked{% endif %}/>
+							<label for="rating-5" class="fa fa-star"></label>
+						</div>
+						<div class="clearfix"></div>
+					</div> -->
+
+				</div>
+				
+<fieldset>				
+				<div class="row"><div class="col-md-12"><label>Write a review:</label>
+				<textarea cols="40" rows="3" name="text" id="text">{{document.my_review.text}}</textarea></div></div>
+</fieldset>
+	
+{% if document.is_reviewed %}
+	<button class="button margin-top-20">Update Review</button>
+{% else %}
+	<button class="button margin-top-20">Submit Review</button>
+{% endif %}
+<div class="clearfix"></div>
+				</form>
+{% else %}
+<div style="padding:20px;" class="text-center">
+    <h1><i class="sl sl-icon-comment"></i></h1>
+<p style="font-weight:500;">Looks like you are not logged in. Enter your details below to review this {{page.doc_type}}. We will auto register a free account for you.</p>
+<div class="form-row">
+<a class="button text-center" href="{{base_url()}}/login"><i class="sl sl-icon-login"></i> Signin to review</a>
+</div></div>
+{% endif %}

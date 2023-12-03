@@ -1,0 +1,175 @@
+{% extends 'layout.twig' %}
+{% block jstriggers %}
+<script type="text/javascript">
+var doc_types = [];
+$(document).ready(function(){
+    
+
+ $('.async_document_type').change(function() {
+        if(this.checked) {
+            //alert(this.value);
+            //this.doc_types = selectDocs();
+            //var returnVal = confirm("Are you sure?");
+            //$(this).prop("checked", returnVal);
+            
+             $.each($("input[class='async_document_type']:checked"), function(){
+                doc_types.push($(this).val());
+            });
+            //alert(doc_types);
+        }else{
+            doc_types = selectDocs();
+        }
+        //alert("Selected Doc Types are: " + doc_types.join(", "));
+        //$('#textbox1').val(this.checked);        
+    });
+   
+ 
+ function selectDocs(){
+     var favorite = [];
+            $.each($("input[class='async_document_type']:checked"), function(){
+                favorite.push($(this).val());
+            });
+            return favorite;
+ }   
+});
+</script>
+{% endblock %}
+{% block content %}
+<div id="titlebar" style="background-color:#34A853;">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2 style="color:#ffffff;font-weight:500;">Discover E-Books, Audio Books & Magazines</h2>
+				<nav id="breadcrumbs">
+					<ul><li><a style="color:#ffffff;font-weight:500;" href="{{ base_url() }}">Home</a></li>
+						<li><a style="color:#ffffff;font-weight:500;" href="{{ base_url() }}/e-book-store">BaziChic Library</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Container -->
+<div class="container">
+<div class="row">
+<div class="col-md-3 nobottommargin">
+<div class="sidebar-widgets-wrap">
+<div class="widget margin-bottom-40">
+<h3 class="margin-top-0 margin-bottom-30">Filter</h3>
+<form name="filterDocumentForm" action="{{base_url()}}/e-book-store" class="form-horizontal filterDocumentFormAAA" method="GET" style="display:block;">
+<!-- Row -->
+					<div class="row with-forms">
+						<div class="col-md-12">
+							<div class="input-with-icon location">
+								<input name="search_item" type="text" placeholder="Search Something" value=""/>
+								<a href="#"><i class="fa fa-search"></i></a>
+							</div></div>
+					</div>
+					
+					<div class="">
+					<div class="margin-top-15">
+						<h4>Select Document Type</h4>
+						<div class="checkboxes one-in-row margin-bottom-15">
+							<input id="check-ebooks" type="checkbox" value ="1" name="document_type[]" class="async_document_type" {% if 1 in page.document_type %} checked="checked"{% endif %}>
+							<label for="check-ebooks"> <i class="sl sl-icon-book-open"></i> E-Books</label>
+
+							<!--<input id="check-audiobooks" type="checkbox" value ="2" name="document_type[]" class="async_document_type">
+							<label for="check-audiobooks"> <i class="sl sl-icon-earphones-alt"></i> Audio Books</label>-->
+
+							<input id="check-magazines" type="checkbox" value ="3" name="document_type[]" class="async_document_type" {% if 3 in page.document_type %} checked="checked"{% endif %}>
+							<label for="check-magazines"> <i class="sl sl-icon-layers"></i> Magazines</label>
+						</div>
+						
+						
+					</div>	
+					
+						<div class="margin-top-30">
+						<h4>Select Category</h4>
+						<div class="checkboxes one-in-row margin-bottom-15">
+
+					{% if page.categories %}
+            {% for category_row in page.categories %}
+				<input id="check-{{category_row.id}}" type="checkbox" name="categories[]" value="{{category_row.id}}" {% if category_row.id in page.selected_categories %} checked="checked"{% endif %}>
+							<label for="check-{{category_row.id}}">{{category_row.title}}</label>
+			{% endfor %}
+            {% endif %}
+						
+						
+						</div></div>
+</div>
+
+
+				
+					<!-- More Search Options -->
+					
+						<!--
+						<a href="#" class="more-search-options-trigger margin-bottom-5 margin-top-20" data-open-title="More Filters" data-close-title="More Filters"></a>
+<div class="more-search-options relative">
+					
+						<div class="checkboxes one-in-row margin-bottom-15">
+					
+							<input id="check-a" type="checkbox" name="flag_filter">
+							<label for="check-a">Free Documents</label>
+
+							<input id="check-b" type="checkbox" name="flag_filter">
+							<label for="check-b">Featured E-Books</label>
+
+							<input id="check-c" type="checkbox" name="flag_filter">
+							<label for="check-c">Premium Only</label>
+						</div>
+					</div> -->
+
+					<button type="submit" class="button fullwidth margin-top-25"> Search</button>
+
+				</div>
+				<!-- Widget / End -->
+					</form>
+
+						</div>
+					</div><!-- .sidebar end -->
+					
+					
+		<div class="postcontent nobottommargin col-md-9">
+
+<!-- 	{% if page.custom_info %}
+          <h5>{{page.custom_info}}</h5>
+    {% endif %}
+<h3 class="margin-top-0 margin-bottom-30">{{page.sql}}</h3> -->
+
+<div id="shop" class="row clearfix">
+{% if page.data %}
+{% for document in page.data %}
+<div class="col-md-4">
+{% include 'partials/widgets/ebookrow.twig' %}
+</div>
+{% endfor %}
+{% else %}
+<section style="padding: 40px;text-align: center;margin-top:30px;margin-bottom:30px;background-color:#eee;" class="well center">
+				<h1 style="text-align: center;font-weight: 500;">
+				    {% if page.doc_type_id == 1 or page.doc_type_id == 3 %}
+				    <i class="sl sl-icon-book-open"></i>
+				    {% else %}
+				    <i class="sl sl-icon-earphones-alt"></i>
+				    {% endif %}
+				    </h1>
+				<h4>Looks like there is no {{page.display_type}} at this moment. Check back again.</h4>
+
+				<!-- Search -->
+				<div class="row" style="margin-top:20px;">
+					<div class="col-lg-8 col-lg-offset-2">
+						<a href="{{base_url()}}/e-book-store" class="button" style="margin-bottom:30px;"><i class="fa fa-arrow-right"></i> View All Documents</a>
+					</div>
+				</div></section>
+{% endif %}
+</div><!-- #shop end -->
+
+
+		</div>
+					
+		<!--- END OF STORE -->
+	</div>
+			<div class="clearfix"></div>
+			<!-- Social Icons / End -->
+
+		</div>
+{% endblock content %}

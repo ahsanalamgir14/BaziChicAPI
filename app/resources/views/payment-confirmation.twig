@@ -1,0 +1,25 @@
+{% extends 'layout.twig' %}
+{% block slider %} 
+{% endblock %}
+{% block content %}
+<!-- Container -->
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="booking-confirmation-page">
+				<i class="fa fa-check-circle"></i>
+				<h2 class="margin-top-30">Thanks for your subscription!</h2>
+				<p>You'll receive a confirmation in your registered email.</p>
+				<p>{{page.display_message}}</p>
+				<a href="{{ base_url() }}/manage-memberships" class="button margin-top-30">My Account</a>
+				<a href="{{ base_url() }}/invoice/{{page.qcode}}" class="button margin-top-10" style="background-color:#444444;color:#ffffff;">View Invoice</a>
+				
+				
+			</div>
+
+		</div>
+	</div>
+</div>
+<!-- Container / End -->
+{% endblock %}

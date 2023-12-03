@@ -1,0 +1,204 @@
+{% extends 'admin_layout.twig' %}
+{% block jstriggers %}
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-lite.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-lite.min.js"></script>     
+<script type="text/javascript">
+ $(document).ready(function() {
+    // $('#summernote').summernote();
+        $("#summernote").summernote({
+        height: 500,
+        toolbar: [
+            [ 'style', [ 'style' ] ],
+            [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
+            [ 'fontname', [ 'fontname' ] ],
+            [ 'fontsize', [ 'fontsize' ] ],
+            [ 'color', [ 'color' ] ],
+            [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
+            [ 'table', [ 'table' ] ],
+            //[ 'insert', [ 'link'] ],
+            [ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
+        ]
+    });
+    
+         $('#selectFaqCategory').on('change', function() {
+		var selectSavedStatus = $(this).val();
+		document.getElementById('loadingCategories').style.display = 'block';   
+		 console.log("Selected: "+selectSavedStatus);
+      	var subjectSelect = $('#selectFaqSubCategory').empty();
+       var subjects_url = base_url+'/apis/faqsubcategories/list/'+selectSavedStatus;
+	   $.get(subjects_url, function(data){
+	    //var data = result;
+	    document.getElementById('loadingCategories').style.display = 'none';   
+	    var arrData = JSON.parse(data);
+        $.each(arrData.result, function(i, item) {
+              $('<option value="' + item.id + '">' + item.title + '</option>').appendTo(subjectSelect);
+                  console.log(item.id+" => "+item.title);
+          });
+           
+            //console.log("JSON : "+JSON.stringify(arrData.result));
+           //alert(JSON.stringify(arrData.result));
+       });
+                  
+    });
+    
+    
+    $('#addFAQForm').submit(function (e) {
+    e.preventDefault();
+    $("html, body").animate({ scrollTop: 0 }, "slow");
+	document.getElementById('addFAQForm').style.display = 'none';
+	document.getElementById('faqFormOverlay').style.display = 'block';
+	
+	var markupStr = $('#summernote').summernote('code');
+	$("textarea#description").val(markupStr);
+	
+    $.ajax({
+        url: $(this).attr('action'),
+        type: "POST",
+        data: $(this).serialize(),
+		dataType: 'json',
+        success: function(data) {
+		if(data.error){
+		 document.getElementById('addFAQForm').style.display = 'none';
+	     document.getElementById('faqFormOverlay').style.display = 'block';   
+		swal({
+  title: '',
+  html: '<b>'+data.message+'</b>',
+  type: 'error',
+  showCancelButton: false,
+  allowOutsideClick: false,
+  confirmButtonColor: '#3085d6',
+  focusConfirm: false
+});
+
+document.getElementById('addFAQForm').style.display = 'block';
+document.getElementById('faqFormOverlay').style.display = 'none';   
+		}else{
+		swal({
+  title: '',
+  html: '<b>'+data.message+'</b>',
+  type: 'success',
+  showCancelButton: false,
+  duration:500,
+  position:'top-right'
+});
+setTimeout(function(){ 
+window.location.replace(base_url+'/manage-faqs');
+}, 2200);
+
+		}
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        //alert(thrownError);
+      }
+    });
+});
+
+
+});
+</script>
+{% endblock %}
+{% block content %}
+<div class="row">
+			<div class="col-lg-12">
+				<div id="add-listing">
+				    
+				     <div id="faqFormOverlay" style="display:none;">
+					<div style="margin: 30px; text-align: center;">
+					<img src="{{base_url()}}/images/preloader.gif" width="60"/>
+					<h4><strong>Submitting FAQ ...</strong></h4>
+					<h5>Please wait...</h5>
+					<div id="login_msg"></div>
+					</div>	
+					</div>
+					
+  <form role="form" name="addFAQForm" id="addFAQForm" action="{{base_url()}}/apis/faqs/create" method="POST">
+					<!-- Section -->
+					<div class="add-listing-section">
+
+						<!-- Headline -->
+						<div class="add-listing-headline">
+							<h3><i class="sl sl-icon-doc"></i> Add New FAQ</h3>
+						</div>
+
+ 
+						<!-- Title -->
+						<div class="row with-forms">
+							<div class="col-md-12">
+								<h5>FAQ Title * <i class="tip" data-tip-content="Enter title for this FAQ"></i></h5>
+								<input class="search-field" type="text" name="title" id="title" value="" placeholder="FAQ Title" required/>
+							</div>
+						</div>
+						
+						<!-- Intro -->
+						<div class="row with-forms">
+							<div class="col-md-12">
+								<h5>FAQ Content * <i class="tip" data-tip-content="Write the FAQ content in detail"></i></h5>
+								 <textarea id="summernote" name="editordata" placeholder="Create formatted content body here" class="WYSIWYG"></textarea>
+								 
+								<textarea class="WYSIWYG" style="display:none;" name="description" cols="40" rows="3" id="description" spellcheck="true" placeholder="Write the FAQ content"></textarea>
+								
+							</div>
+						</div>
+
+			
+<!-- Row -->
+
+<div id="loadingCategories" style="display:none;padding:6px 12px;text-align:center;margin:20px auto;background-color:#284F4A;width: fit-content;
+    height: fit-content;border-radius:14px;"><span style="color:white;padding-bottom: 4px;">Loading categories</span></div>
+
+						<div class="row with-forms">
+							<!-- Status -->
+							<div class="col-md-6">
+								<h5>Select Category <span>*</span> <i class="tip" data-tip-content="Choose a suitable category"></i></h5>
+								<select class="chosen-select-no-single" name="category_id" id="selectFaqCategory" required>
+									<option value="">Select a category</option>	
+									{% if page.categories %}
+            {% for category_row in page.categories %}
+			<option value="{{category_row.id}}">{{category_row.title}}</option>
+			{% endfor %}
+            {% endif %}
+			</select></div>
+
+							<div class="col-md-6">
+								<h5>Select Sub-category <span>*</span> <i class="tip" data-tip-content="Select a Sub-category"></i></h5>
+								<select class="" name="subcategory_id" id="selectFaqSubCategory">
+									<option value="">Select a category</option>
+								</select>
+							</div>
+						</div>
+						<!-- Row / End -->
+
+						<div class="row with-forms">
+							<!-- Type -->
+							<div class="col-md-12" style="display:none;">
+								<h5>SEO Url <i class="tip" data-tip-content="SEO url to attach this content. No White space allowed." ></i></h5>
+								<input type="text" name="qcode" id="qcode" placeholder="SEO Link" readonly>
+							</div>
+							
+								<div class="col-md-12">
+								<h5>Sort Index (Priority Number)<i class="tip" data-tip-content="Enter a number starting from 0. FAQs will be displayed in order of least value first." ></i></h5>
+								<input type="number" name="sort_id" id="sort_id" placeholder="e.g. 1,2,3" max="500">
+							</div>
+							
+						</div>
+						<!-- Row / End -->
+						<input type="hidden" name="is_published" value="0">	
+						<div class="row with-forms">
+									<div class="checkboxes margin-top-10 margin-left-10">
+										<input id="is_published" type="checkbox" name="is_published" value="1">
+										<label for="is_published">Publish this FAQ and make available to the public.</label>
+									</div>
+								</div>
+						
+							
+						<button type="submit" class="button preview"> <i class="fa fa-arrow-circle-right"></i> Add FAQ</button>
+						
+					</div>
+					<!-- Section / End -->
+                    </form>
+				</div>
+			</div>
+		</div>
+		
+{% endblock content %}

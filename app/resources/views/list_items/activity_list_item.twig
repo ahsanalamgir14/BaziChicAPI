@@ -1,0 +1,18 @@
+	<li {% if activity.status == "Pending" %} class="unread"{% endif %}>
+								<a href="{{base_url()}}/{{activity.action_link}}" target="_blank">
+								    
+									<div class="message-avatar">
+									    {% if activity.user_image %}				
+	<img id="cover_image_preview" src="{{base_url()}}/uploads/images/users/{{activity.user_image}}?d=mm&amp;s=70">
+	{% else %}
+	 <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&amp;s=70" />
+    {% endif %}</div>
+
+	<div class="message-by"><div class="message-by-headline">
+											<h5>{{activity.title}} {% if activity.status == "Pending" %} <i>Unread</i> {% endif %}</h5>
+											<span>{{activity.date_created}}</span>
+										</div>
+										<p>{{activity.message}}</p>
+									</div>
+								</a>
+							</li>

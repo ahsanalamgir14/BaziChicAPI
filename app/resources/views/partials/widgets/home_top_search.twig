@@ -1,0 +1,29 @@
+ 	<!-- Search -->
+		<div class="col-md-7a" style="width:100%;margin-top:10px;">
+		    <form name="filterDocumentForm" action="{{base_url()}}/bazichik/filter" class="form-horizontal filterDocumentForm" method="POST">
+			<div class="main-search-input gray-style margin-top-0 margin-bottom-10">
+
+				<div class="main-search-input-item" style="padding-left: 20px;
+    padding-right: 10px;">
+					<select data-placeholder="All Categories" class="chosen-select" name="document_type" id="filter_document_type">
+						<option>All Resources</option>	
+							<option>Looking For</option>	
+								<option value="1">E-Books</option>	
+								<option value="2">Audio Books</option>
+								<option value="3">Magazines</option>
+								<option>By Category</option>
+								{% for row in page.categories %}
+								<option value="{{row.id}}">{{row.title}}</option>	
+	 {% endfor %} 
+					</select></div>
+
+				<div class="main-search-input-item" style="padding-left: 20px;
+    padding-right: 10px;">
+					<input type="text" name="search_item" placeholder="Search all resources" value=""/>
+				</div>
+
+				<button class="button" style=""><i class="fa fa-search"></i></button>
+			</div>
+			</form>
+		</div>
+		<!-- Search Section / End -->

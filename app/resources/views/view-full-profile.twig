@@ -1,0 +1,318 @@
+{% extends 'admin_layout.twig' %}
+{% block jstriggers %}
+<script type="text/javascript">
+ $(document).ready(function() {
+   
+    $('#autogenerate_txn').change(function() {
+	//var autogenerate_pass = $(this).val();
+	if ($('input#autogenerate_txn').is(':checked')) {
+	     document.getElementById("txn_id").style.display = 'none';
+	}else{
+	     document.getElementById("txn_id").style.display = 'block';
+	}
+    });
+    
+    $('#plan_id').change(function() {
+	var selectedPlan = $(this).val();
+	//var users_url = base_url+'/membership/info/'+selectedPlan;
+	//alert(users_url+" => "+selectedPlan);
+	/*
+	   $.get(users_url, function(result){
+	       var result = $.parseJSON(result);
+		   alert(result);
+			var userSelectTxt = $('#amount');
+			$(userSelectTxt).val(result.price+" USD");
+		    //document.getElementById("amountSpan").html(result.price+" USD");
+			//document.getElementById("durationSpan").val(result.price+" This subscription will be valid for days.");
+			$("#amountSpan").text(result.price+" USD");
+			$("#durationSpan").text("This subscription will be valid for "+result.duration+" days.");
+       });
+       */
+       
+	 //document.getElementById("amount").val("1000");
+	 
+	 if(selectedPlan == 2){
+	      document.getElementById("planTypeArea").style.display = 'block';
+	}else{
+	     document.getElementById("planTypeArea").style.display = 'none';
+	}
+	
+    });
+    
+});
+</script>
+{% endblock %}
+{% block content %}
+		<div class="row">
+
+			<!-- Profile -->
+			<div class="col-lg-12 col-md-12">
+					 	<!-- Contact -->
+			<div class="boxed-widget" style="background-color:#ffffff;">
+				<div class="hosted-by-title">
+					<h3 style="border-bottom: 0px solid #e8e8e8;">
+					<a style="color:#444444;font-weight:500;" href="{{base_url()}}/profile/{{page.thisUser.user_name}}">{{page.thisUser.first_name}} {{page.thisUser.last_name}}</a>
+					<span>{{page.thisUser.last_seen}}</span> </h3>
+					<a href="#" class="hosted-by-avatar">
+					    
+					    {% if page.thisUser.user_image %}			
+	<img id="profilePreview" src="{{base_url()}}/uploads/images/users/{{page.thisUser.user_image}}?d=mm&amp;s=70" class="NO-CACHE">
+	{% else %}
+	<img id="profilePreview" src="{{base_url()}}/images/avatar.jpg">
+    {% endif %}
+					    </a>
+				</div>
+				<ul class="listing-details-sidebar">
+				    <li style="color:#444444;font-weight:500;"><i class="fa fa-trophy"></i> Loyalty Points: {{page.thisUser.loyalty_points}}</li>
+				    <li style="color:#444444;font-weight:500;"><i class="fa fa-birthday-cake"></i> DOB: {{page.thisUser.dob}}</li>
+				    <!--
+				     {% if page.isMembershipActive %}	
+				    <li><i class="sl sl-icon-shield"></i> Active Plan : {{page.activePlans.plan_name}}</li>
+				    {% endif %}
+				    -->
+					<li style="color:#444444;font-weight:500;"><i class="fa fa-globe"></i> Country: {{page.thisUser.country}}</li>
+					<li style="color:#444444;font-weight:500;"><i class="fa fa-envelope-o"></i> Email: <a href="#">{{page.thisUser.email}}</a></li>
+					 {% if page.thisUser.last_active %}	
+				    <li style="color:#444444;font-weight:500;"><i class="fa fa-clock-o"></i> Last Active : {{page.thisUser.last_active}}</li>
+				    {% endif %}
+				</ul>
+
+				<a href="{{base_url()}}/profile/{{page.thisUser.user_name}}" class="send-message-to-owner button"><i class="sl sl-icon-pencil"></i> Edit Profile</a>
+			</div>
+			<!-- Contact / End-->
+			</div>
+         
+         
+			
+			
+<!----Show Active Plans----->
+{% if page.activePlans|length > 0 %}
+	<div class="col-lg-12 col-md-12">
+				<div class="dashboard-list-box margin-top-10">
+					<h4 class="gray"><i class="sl sl-icon-shield"></i> Active Subscription</h4>
+					<div class="dashboard-list-box-static">
+						<div class="table-responsive" style="margin:4px;">
+						<table id="datatable1" class="table table-striped" cellspacing="0" width="100%" style="background-color:#ffffff;">
+							<thead>
+								<tr>
+									<th>Subscription Plan</th>
+									<th>Subscription Date</th>
+									<th>Expiry Date</th>
+								</tr>
+							</thead>
+							<tbody>
+							 {% for row in page.activePlans %}
+						<tr>
+									<td style="color:#444444;font-weight:600;">{{row.plan_name}}</td>
+									<td style="color:#444444;font-weight:600;">{{row.date_created}}</td>
+									<td style="color:#444444;font-weight:600;">{{row.date_expiring}}</td>
+								</tr>
+			 {% endfor %}
+					
+							
+							</tbody>
+						</table>
+					</div> 
+           </div> 	</div> 	</div> 
+                 {% else %}
+			<div style="text-align: center;padding: 0px 0;">
+				 	<!-- Add Membership Dialog -->
+			<div id="small-dialog" class="zoom-anim-dialog mfp-hide">
+			<div class="small-dialog-header">
+			<h3>Assign Subscription Plan</h3>
+			</div>
+			 <div id="formOverlay" style="display:none;">
+					<div style="margin: 30px; text-align: center;">
+					<img src="{{base_url()}}/images/preloader.gif" width="60"/>
+					<h4><strong>Creating Subscription</strong></h4>
+					<h5>Please wait...</h5>
+					<div id="login_msg"></div>
+					</div>	
+					</div>
+					<form method="POST" role="form" name="assignSubscriptionForm" id="assignSubscriptionForm" action="{{base_url()}}/subscriptions/assign">
+			<div class="message-reply margin-top-0">
+			<input type="hidden" name="user_id" id="user_id" value="{{page.thisUser.id}}">
+			<label style="margin-top: 0px;font-weight:bold;">Select Subscription Plan</label>		    	
+			<select class="chosen-select-no-single" name="plan_id" id="plan_id" required="required">
+			<option label="blank">Select a plan</option>
+			{% if page.allPlans %}
+            {% for comp_row in page.allPlans %}
+			<option value="{{comp_row.id}}">{{comp_row.title}}</option>
+			{% endfor %}
+            {% endif %}</select>
+            
+            
+            <div id="planTypeArea" style="display:none;">
+                <label style="margin-top: 12px;font-weight:bold;">Select Subscription Type</label>
+                <select class="chosen-select-no-single" name="plan_subtype" id="plan_subtype" required="required">
+			<option value="Monthly">$39/ Month</option>
+			<option value="Yearly">$120/ Year</option>
+			</select>
+            </div>
+
+
+<label style="margin-top: 0px;" id="durationSpan"></label>
+
+	             
+					<div class="row">
+					    <div class="col-md-6">
+					<label style="margin-top: 0px;font-weight:bold;">Subscription Start Date</label>
+								<input type="text" name="startDate" id="startDate" data-dd-format="Y-m-d H:m:s" data-lang="en" placeholder="Select start date">
+							</div>
+							
+						<div class="col-md-6">	
+							<label style="margin-top: 0px;font-weight:bold;">Amount Paid (in USD)</label>
+							<input name="amount" id="amount" type="number" placeholder="Amount Paid (in $)" required>
+								</div>
+								</div>
+							
+						
+						<div class="checkboxes in-row margin-bottom-20">
+							<input id="autogenerate_txn" type="checkbox" name="autogenerate_txn" value="1" checked>
+							<label for="autogenerate_txn" style="color:#333333;">Automatically generate a transaction ID.</label>
+						</div>
+						
+						<input name="txn_id" id="txn_id" type="text" placeholder="Enter Transaction ID" value="" style="display:none;">
+							
+						<label style="margin-top: 0px;font-weight:bold;">Add a note</label>	
+						<input name="note" id="note" type="text" placeholder="Comment (Optional)">
+						
+						<div class="checkboxes in-row margin-bottom-20 margin-top-10">
+							<input id="check-b" type="checkbox" name="status" value="1" required>
+							<label for="check-b">Confirm the receipt of <span id="amountSpan" style="font-weight:bold;">payment</span> and activate subscription.</label>
+						</div>	
+						
+						
+						<button class="send-message-to-owner button">Confirm Subscription</button>
+					</div>
+					</form>
+				</div>
+				<!-- Add Membership Dialog -->	
+			</div>
+            {% endif %}
+<!----Show Active Plans----->   
+
+{% if page.activePlans|length > 0 %}
+ {% else %}
+<div class="row">
+			<div class="col-lg-12 col-md-12">
+			<div class="boxed-widget margin-top-10 margin-bottom-60" style="background-color:#ffffff;padding:30px;text-align:center;">
+			    <p style="padding-bottom: 4px;margin-top:25px;color:#333;font-weight:bold;">Looks like there is no subscription associated with this account.</p>
+				<a href="#small-dialog" class="button popup-with-zoom-anim"><i class="sl sl-icon-shield"></i> Assign Membership</a>
+	</div></div></div>			    
+ {% endif %}
+ 
+ 
+ <!----Show Free Trials----->
+ {% if page.thisUser.activeTrial|length > 0 %}
+	<div class="col-lg-12 col-md-12">
+				<div class="dashboard-list-box margin-top-10">
+					<h4 class="gray"><i class="sl sl-icon-plane"></i>Active Free Trial</h4>
+					<div class="dashboard-list-box-static">
+						<div class="table-responsive" style="margin:4px;">
+	<table id="datatable1" class="table table-striped" cellspacing="0" width="100%" style="background-color:#ffffff;">
+							<thead>
+								<tr>
+									<th>Subscription Plan</th>
+									<th>Trial Start Date</th>
+									<th>Expiry Date</th>
+								</tr>
+							</thead>
+							<tbody>
+							 {% for row in page.activePlans %}
+						<tr>
+			<td style="color:#444444;font-weight:600;">{{page.thisUser.activeTrial.plan_name}}</td>
+			<td style="color:#444444;font-weight:600;">{{page.thisUser.activeTrial.date_created}}</td>
+			<td style="color:#444444;font-weight:600;">{{page.thisUser.activeTrial.date_expiring}}</td>
+			</tr>
+			 {% endfor %}
+					
+							
+							</tbody>
+						</table>
+</div></div></div></div>
+{% else %}
+{% endif %}
+<!----Show Free Trials----->
+	<!-- My subscription history -->
+			{% if page.thisUser.allFreeTrials|length > 0 %}
+			<div class="col-lg-12 col-md-12">
+				<div class="dashboard-list-box margin-top-10 margin-bottom-20">
+					<h4 class="gray">Trials Summary</h4>
+					<div class="dashboard-list-box-static">
+                   
+ <div class="row">
+<div class="col-lg-12 center">
+						<div class="table-responsive" style="margin-top:20px;">
+						<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%" style="background-color:#ffffff;">
+							<thead>
+								<tr>
+									<th>Subscription Plan</th>
+									<th>Trial Start Date</th>
+									<th>Expired</th>
+								</tr>
+							</thead>
+							<tbody>
+							 {% for row in page.thisUser.allFreeTrials %}
+						<tr>
+									<td style="color:#444444;font-weight:600;">{{row.plan_name}}</td>
+									<td style="color:#444444;font-weight:600;">{{row.date_created}}</td>
+									<td style="color:#444444;font-weight:600;">{{row.date_expiring}}</td>
+								</tr>
+			 {% endfor %}
+					
+							
+							</tbody>
+						</table>
+					</div> 
+    
+</div></div> 				
+					</div>
+				</div>
+			</div>
+         {% endif %}
+<!-- End of My subscription history -->  
+<!----Show Free Trials----->
+  
+ 
+			<!-- My subscription history -->
+			{% if page.thisUser.my_plans|length > 0 %}
+			<div class="col-lg-12 col-md-12">
+				<div class="dashboard-list-box margin-top-10 margin-bottom-20">
+					<h4 class="gray">Subscription History</h4>
+					<div class="dashboard-list-box-static">
+ <div class="row">
+<div class="col-lg-12 center">
+						<div class="table-responsive" style="margin-top:20px;">
+						<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%" style="background-color:#ffffff;">
+							<thead>
+								<tr>
+									<th>Subscription Plan</th>
+									<th>Subscription Date</th>
+									<th>Expiry Date</th>
+								</tr>
+							</thead>
+							<tbody>
+							 {% for row in page.thisUser.my_plans %}
+						<tr>
+									<td>{{row.plan_name}}</td>
+									<td>{{row.date_created}}</td>
+									<td>{{row.date_expiring}}</td>
+								</tr>
+			 {% endfor %}
+					
+							
+							</tbody>
+						</table>
+					</div> 
+    
+</div></div> 				
+					</div>
+				</div>
+			</div>
+         {% endif %}
+<!-- End of My subscription history -->  
+
+
+		</div>
+{% endblock content %}

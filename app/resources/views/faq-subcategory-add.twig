@@ -1,0 +1,114 @@
+{% extends 'admin_layout.twig' %}
+{% block jstriggers %}
+<script type="text/javascript">
+ $(document).ready(function() {
+
+ $('#createFAQSubCategoryForm').submit(function (e) {
+    e.preventDefault();
+    $("html, body").animate({ scrollTop: 0 }, "slow");
+	document.getElementById('createFAQSubCategoryForm').style.display = 'none';
+	document.getElementById('faqFormOverlay').style.display = 'block';
+    $.ajax({
+        url: $(this).attr('action'),
+        type: "POST",
+        data: $(this).serialize(),
+		dataType: 'json',
+        success: function(data) {
+		if(data.error){
+		 document.getElementById('createFAQSubCategoryForm').style.display = 'none';
+	     document.getElementById('faqFormOverlay').style.display = 'block';   
+		swal({
+  title: '',
+  html: '<b>'+data.message+'</b>',
+  type: 'error',
+  showCancelButton: false,
+  allowOutsideClick: false,
+  confirmButtonColor: '#3085d6',
+  focusConfirm: false
+});
+		}else{
+		swal({
+  title: '',
+  html: '<b>'+data.message+'</b>',
+  type: 'success',
+  showCancelButton: false,
+  confirmButtonColor: '#3085d6',
+  focusConfirm: false
+});
+setTimeout(function(){ 
+window.location.replace(base_url+'/faqs-category-manager');
+}, 2200);
+
+		}
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        //alert(thrownError);
+      }
+    });
+});
+
+});
+</script>
+{% endblock %}
+{% block content %}
+<div class="row">
+			<div class="col-lg-12">
+				<div id="add-listing">
+				    
+				     <div id="faqFormOverlay" style="display:none;">
+					<div style="margin: 30px; text-align: center;">
+					<img src="{{base_url()}}/images/preloader.gif" width="60"/>
+					<h4><strong>Saving  Sub-Category...</strong></h4>
+					<h5>Please wait...</h5>
+					</div>	
+					</div>
+					
+  <form role="form" name="createFAQSubCategoryForm" id="createFAQSubCategoryForm" action="{{base_url()}}/apis/faqSubCategories/create" method="POST">
+					<!-- Section -->
+					<div class="add-listing-section">
+
+						<!-- Headline -->
+						<div class="add-listing-headline">
+							<h3><i class="sl sl-icon-doc"></i> Create New FAQ Sub-Category</h3>
+						</div>
+
+						<!-- Title -->
+						<div class="row with-forms">
+							<div class="col-md-12">
+								<h5>Category Title * <i class="tip" data-tip-content="Enter title for this Category"></i></h5>
+								<input class="search-field" type="text" name="title" id="title" placeholder="Category Title" required/>
+							</div>
+						</div>
+						
+						<div class="row with-forms">
+							<!-- Status -->
+							<div class="col-md-6">
+								<h5>Select Category <span>*</span> <i class="tip" data-tip-content="Choose a main category"></i></h5>
+								<select class="chosen-select-no-single" name="category_id" required>
+									<option value="">Select a category</option>	
+									{% if page.categories %}
+            {% for category_row in page.categories %}
+			<option value="{{category_row.id}}">{{category_row.title}}</option>
+			{% endfor %}
+            {% endif %}
+								</select>
+							</div>
+
+							<div class="col-md-6">
+	<h5>Sort Index (Priority Number)<i class="tip" data-tip-content="Enter a number starting from 0. Categories will be displayed in order of least value first." ></i></h5>
+								<input type="number" name="sort_id" id="sort_id" placeholder="e.g. 1,2,3" max="500" value="1">
+							</div>
+						</div>
+					
+							
+						<button type="submit" class="button preview"> <i class="fa fa-arrow-circle-right"></i> Save Category</button>
+						
+					</div>
+					<!-- Section / End -->
+                    </form>
+				</div>
+			</div>
+		</div>
+		
+{% endblock content %}

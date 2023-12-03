@@ -1,0 +1,57 @@
+			<li class="pending-booking">
+							<div class="list-box-listing">
+								<div class="list-box-listing-img">
+								    <a href="">
+								     {% if document.cover %}					
+	<img src="{{base_url()}}/uploads/images/docs/{{document.cover}}">
+	 {% else %}
+	 <img src="{{base_url()}}/images/books/default.png">
+    {% endif %}
+								    </a></div>
+								<div class="list-box-listing-content">
+									<div class="inner">
+										<h3>{{ document.title }} <span class="booking-status pending"></span></h3>
+{% if document.date_updated %}
+	<div class="inner-booking-list" style="margin-top:5px;">
+											<h5>Last Read </h5>
+											<ul class="booking-list">
+												<li class="highlighted">{{ document.date_updated }}</li>
+											</ul>
+										</div>
+    {% endif %}
+									
+										
+										{#	<div class="inner-booking-list">#}
+										{#	<h5>Started </h5>#}
+										{#	<ul class="booking-list">#}
+										{#		<li class="highlighted">{{ document.date_created }}</li>#}
+										{#	</ul>#}
+										{#</div>#}
+											
+											{% if document.read_status %}		
+										<div class="inner-booking-list">
+											<h5>Progress:</h5>
+											<ul class="booking-list">
+												<li class="highlighted">{{ document.read_status }} </li>
+											</ul>
+										</div>
+								 {% endif %}
+								 
+	<form action="{{base_url()}}/ebook-reader" name="launchReaderForm" id="launchReaderForm" method="POST" style="margin-top:10px;margin-bottom:10px;">
+			    <input type="hidden" name="doc_id" value="{{document.id}}">
+			    <input type="hidden" name="doc_link" value="{{document.link}}">
+			    <input type="hidden" name="is_downloadable" value="{{document.is_downloadable}}">
+			    <input type="hidden" name="last_read_page" value="{{document.page}}">
+			    <button type="submit" class="button"> <i class="fa fa-arrow-right"></i> {{document.access_verb}} NOW</button>
+			    </form>
+
+									</div>
+								</div>
+							</div>
+							<div class="buttons-to-right">
+							    {% if document.is_liked <=0 %}
+							    <a href="#" class="button gray reject favouriteDocument" data-id="{{document.id}}" data-title="Unliked"><i class="sl sl-icon-heart"></i> Favourite</a>
+								{% endif %}
+								<a href="{{base_url()}}/book-detail/{{document.qcode}}" class="button orange approve"><i class="sl sl-icon-check"></i> View Detail</a>
+							</div>
+						</li>

@@ -1,0 +1,66 @@
+	<div class="product sf-dress clearfix" style="margin-bottom:20px;">
+								<div class="product-image">
+									
+									<a href="{{base_url()}}/book-detail/{{document.qcode}}">
+									  {% if document.cover %}					
+	<img src="{{base_url()}}/uploads/images/docs/{{document.cover}}" style="max-width: 100%;
+  min-height: 100%;
+  object-fit: cover;">
+	 {% else %}
+	 <img src="{{base_url()}}/images/books/default.png" style="height:300px;">
+    {% endif %}
+ </a>
+									    
+									    
+									 {% if document.tag %}	<div class="sale-flash orange">{{document.tag}}</div> {% endif %}
+									 {% if page.carosell_view > 0 %}	
+									<div class="product-overlay">
+
+ {% if session.userID > 0 %}						
+		 	  {% if document.is_liked %}						
+			<a href="#" data-id="{{document.id}}" class="add-to-cart favouriteDocument" data-title="Liked"><i class="fa fa-heart"></i><span> Bookmarked</span></a>	
+{% else %}
+	<a href="#" data-id="{{document.id}}" class="add-to-cart favouriteDocument" data-title="Uniked"><i class="fa fa-heart-o"></i><span> Bookmark</span></a>
+{% endif %}								
+		 {% else %}
+		 		<a href="#sign-in-dialog" class="item-quick-view popup-with-zoom-anim" data-lightbox="ajax"><i class="fa fa-heart"></i><span> Favourite</span></a>
+		 {% endif %}									    
+									  
+<a href="{{base_url()}}/book-detail/{{document.qcode}}" class="item-quick-view" data-lightbox="ajax"><i class="icon-zoom-in2"></i><span> View Detail</span></a>
+									</div>
+									{% endif %}	
+								</div>
+
+	{% if page.carosell_view > 0 %}	
+    		<div class="product-desc center" style="background: #fffff;
+    border-radius-bottom: 0 0 4px 4px;padding:8px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;">
+<div class="product-title" style="height:50px;"><h3><a href="{{base_url()}}/book-detail/{{document.qcode}}">{{document.title}}</a></h3></div>
+									
+<div class="row" style="display:none;">
+    <div class="col-md-6">
+        	{% if document.num_saves > 0 %}					
+	<div class="product-price"> <ins>{{document.num_saves}} <i class="fa fa-save"></i> </ins></div>
+	{% else %}
+	<div class="product-price"> <ins></ins></div>
+    {% endif %}
+    </div>
+    <div class="col-md-6 text-right">
+    {% if document.num_likes > 0 %}
+	<div class="product-price"> <ins>{{document.num_likes}} <i class="fa fa-heart"></i> </ins> </div>
+	{% else %}
+	<div class="product-price"> <ins>0 <i class="fa fa-heart-o"></i> </ins></div>
+    {% endif %}
+    </div>
+</div>
+    
+    
+	<!--<div class="product-rating"><div class="star-rating" data-rating="{{document.avg_rating}}">
+							<div class="rating-counter">({{document.num_reviews}} reviews)</div>
+						</div></div>-->
+						
+				
+						
+								</div>
+{% endif %}
+							</div>

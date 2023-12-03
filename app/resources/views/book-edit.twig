@@ -1,0 +1,131 @@
+{% extends 'admin_layout.twig' %}
+{% block jstriggers %}
+<style>
+    #myProgress {
+  width: 100%;
+  background-color: grey;
+}
+
+#myBar {
+  width: 1%;
+  height: 30px;
+  background-color: green;
+}
+</style>
+<script type="text/javascript">
+ $(document).ready(function() {
+
+
+$('#docFileUploadForm').submit(function (e) {
+    e.preventDefault();
+	var form = $('#docFileUploadForm');
+    var data = new FormData(this);
+    
+    
+  /********######## THEN SWAL #######*******/
+  swal({
+  title: 'Upload File',
+  text: "Are you sure that you want to upload this file?",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Confirm'
+}).then((result) => {
+  if (result.value) {
+    document.getElementById("doc_file_overlay").style.display = 'block';
+	document.getElementById("docFileUploadForm").style.display = 'none';
+	document.getElementById("myProgress").style.display = 'block';
+    //alert(data);
+    $.ajax({
+        url: $(this).attr('action'),
+        type: "POST",
+        data: data,
+        beforeSend: function(request) {
+        request.setRequestHeader("Authorization", authorization);
+        },
+                xhr: function() {
+        var xhr = new window.XMLHttpRequest();
+        xhr.upload.addEventListener("progress", function(evt) {
+        if (evt.lengthComputable) {
+        var percentComplete = (evt.loaded / evt.total) * 100;
+        //Do something with upload progress here
+        console.log("percentComplete: "+percentComplete);
+        var percentValue = percentComplete + '%';
+    percentComplete = Math.floor(percentComplete);	            
+    var elem = document.getElementById("myBar");
+    var elemTxt = document.getElementById("myBarTxt");
+    elem.style.width = percentComplete + "%";
+    elemTxt.innerHTML = percentComplete + "%";
+      if(percentComplete >= 100) {
+        document.getElementById("myProgress").style.display = 'none';
+      }
+                        
+    	            
+            }
+       }, false);
+       return xhr;
+    },     
+		processData: false, 
+        contentType: false, 
+		dataType: 'json',
+        success: function(data) {
+		if(data.error){
+        document.getElementById("doc_file_overlay").style.display = 'none';
+	    document.getElementById("docFileUploadForm").style.display = 'block';
+		swal({
+  title: '',
+  html: '<b>'+data.message+'</b>',
+  type: 'error',
+  showCancelButton: false,
+  allowOutsideClick: false,
+  confirmButtonColor: '#3085d6',
+  focusConfirm: false
+});
+		}else{
+	document.getElementById("doc_file_overlay").style.display = 'none';
+	document.getElementById("docFileUploadForm").style.display = 'block';
+		swal({
+  title: 'File Uploaded',
+  html: '<b>'+data.message+'</b>',
+  type: 'success',
+  showCancelButton: false,
+  allowOutsideClick: false,
+  confirmButtonColor: '#3085d6',
+  focusConfirm: false
+});
+setTimeout(function(){
+location = base_url+"/manage-documents";
+}, 2200);
+		}
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        //alert(xhr.status);
+        //alert(thrownError);
+      }
+    });
+  }
+}); 
+/**** END THEN SWAL******/
+});
+
+
+});
+</script>
+{% endblock %}
+{% block content %}
+	<!-- Overlay Section -->
+	  <div id="update_doc_overlay" style="display:none;">
+		<div id="add-listing">
+				    <div class="add-listing-section">
+						<div style="padding:60px;text-align: center;">
+					<img src="{{base_url()}}/images/preloader.gif" width="70"/>
+					<h3 style="color:#121212;margin-top:30px;"><strong>Updating {{page.doc_type}}...</strong></h3>
+					<h4 style="color:#232323;">Please wait...</h4>
+					</div>	
+					</div>	
+					</div></div>
+					<!-- Section / End -->
+{% include 'forms/add_document_cover_form.twig' %}			
+{% include 'forms/add_document_form.twig' %}				
+{% endblock content %}

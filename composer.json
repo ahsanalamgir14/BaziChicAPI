@@ -1,0 +1,13 @@
+{
+    "require": {
+        "slim/slim": "^3.0",
+        "slim/twig-view": "^2.0",
+        "awurth/slim-validation": "^2.1",
+        "davidepastore/slim-validation": "^0.5.0",
+        "slim/flash": "^0.4.0",
+        "kanellov/slim-twig-flash": "^0.2.0",
+        "dyorg/slim-token-authentication": "^0.3.3",
+        "slim/csrf": "^1.2",
+        "stripe/stripe-php": "^10.13"
+    }
+}

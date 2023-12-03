@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>{{ page.title }}</title>
+<meta name="description" content="{{ page.description }}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" type="image/png" href="{{ base_url() }}/images/favicon.png"/>
+<link rel="stylesheet" href="{{ base_url() }}/css/invoice.css">
+<link rel="stylesheet" href="{{ base_url() }}/css/style.css">
+<link rel="stylesheet" href="{{ base_url() }}/css/custom.css">
+<link rel="stylesheet" href="{{ base_url() }}/css/colors/main.css" id="colors">
+<script type="text/javascript" src="{{ base_url() }}/scripts/jquery-2.2.0.min.js"></script>
+<script type="text/javascript">
+ var authorization = '{{ session.api_key }}';
+	 function docImgPreview() {
+        var oFReader = new FileReader();
+        oFReader.readAsDataURL(document.getElementById("cover_image").files[0]);
+        oFReader.onload = function (oFREvent) {
+            document.getElementById("cover_image_preview").src = oFREvent.target.result;
+			$('#docMediaUploadForm').submit();
+        };
+    };
+	
+	function profileImgPreview() {
+        var oFReader = new FileReader();
+        oFReader.readAsDataURL(document.getElementById("profile_image").files[0]);
+        oFReader.onload = function (oFREvent) {
+            document.getElementById("profilePreview").src = oFREvent.target.result;
+			//$('#servicePhotoForm').submit();
+        };
+    };
+    
+    function showPdfPreview() {
+       //alert("Preview loaded");
+              
+        parseDoc();
+         $('#docFileUploadForm').submit(); 
+       pdffile=document.getElementById("doc_link").files[0];
+                pdffile_url=URL.createObjectURL(pdffile);
+                $('#viewer').attr('src',pdffile_url);
+    };
+    
+    function parseDoc() {
+      var input = document.getElementById("doc_link");
+var reader = new FileReader();
+reader.readAsBinaryString(input.files[0]);
+reader.onloadend = function(){
+    var count = reader.result.match(/\/Type[\s]*\/Page[^s]/g).length;
+    //console.log('Number of Pages:',count );
+    //alert("Preview loaded => "+count);
+    $('#num_pages').attr('value', count);
+}
+    };
+</script>
+{% block jstriggers %} {% endblock %}
+<script type="text/javascript" src="{{ base_url() }}/scripts/front_script.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/scripts/script.js"></script>
+</head>
+<body>
+<div id="wrapper">
+<header id="header-container" class="fixed fullwidth dashboard">
+    {% include 'partials/admin/top_header.twig' %}
+	</div>
+	<!-- Header / End -->
+</header>
+<div class="clearfix"></div>
+<!-- Header Container / End -->
+
+<!-- Dashboard -->
+<div id="dashboard">
+    {% include 'partials/admin/dash_nav.twig' %}
+	<!-- Content
+	================================================== -->
+	<div class="dashboard-content">
+		{% block content %} {% endblock %}
+		</div>
+
+</div>
+<!-- END OF DASHBOARD -->
+</div>
+<!-- Wrapper / End -->
+
+
+
+<!-- Scripts
+================================================== -->
+<script type="text/javascript" src="{{ base_url() }}/scripts/mmenu.min.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/scripts/chosen.min.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/scripts/slick.min.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/scripts/rangeslider.min.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/scripts/magnific-popup.min.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/scripts/waypoints.min.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/scripts/counterup.min.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/scripts/jquery-ui.min.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/scripts/tooltips.min.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/scripts/custom.js"></script>
+<script src="{{ base_url() }}/scripts/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<link href="{{ base_url() }}/css/plugins/datedropper.css" rel="stylesheet" type="text/css">
+<script src="{{ base_url() }}/scripts/datedropper.js"></script>
+<script>$('#dob').dateDropper();</script> 
+<script>$('#startDate').dateDropper();</script>
+<script>$('#endDate').dateDropper();</script>
+<script type="text/javascript" src="{{ base_url() }}/scripts/src/referrals.js"></script>
+{% block jsfooter %} {% endblock %}
+</body>
+</html>

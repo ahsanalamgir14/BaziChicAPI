@@ -1,0 +1,46 @@
+{% extends 'layout.twig' %}
+{% block jstriggers %}
+<script type="text/javascript">
+ $(document).ready(function() {
+   
+    $('#autogenerate_pass').change(function() {
+	//var autogenerate_pass = $(this).val();
+	if ($('input#autogenerate_pass').is(':checked')) {
+	     document.getElementById("password_section").style.display = 'none';
+	}else{
+	     document.getElementById("password_section").style.display = 'block';
+	}
+    });
+    
+});
+</script>
+{% endblock %}
+{% block slider %} 
+{% endblock %}
+{% block content %}
+<div class="container">
+<div class="row margin-top-10">
+<div class="col-lg-4">
+<div class="boxed-widget" style="z-index: 50;box-sizing: border-box;border-radius: 4px;margin:15px;">
+<div class="text-center">
+<!-- Headline -->
+<div class="inner">
+<div class=""><img src="{{base_url()}}/images/logo.png" style="width:140px;height:140px;margin:6px;"></div>
+<div class="text-center">
+<h3 style="color:#333;font-weight: bold;">Welcome to Bazichik</h3>
+<p style="color:#444;font-size: 15px;font-weight: bold;">Chinese Metaphysics Consultancy</p>
+</div>
+<span style="color:#333;">Join our community of like minded people to access knowledge and earn reward points when you learn.</span></div>
+<a href="{{base_url()}}/login" class="button fullwidth margin-top-25"><i class="fa fa-user"></i> Already a member?</a>
+</div></div></div>
+		
+<div class="col-lg-8">
+<div class="boxed-widget" style="z-index: 50;box-sizing: border-box;border-radius: 4px;margin:15px;">
+{% include 'forms/register_form.twig' %}
+</div>
+</div>
+<div class="col-lg-2"></div>
+</div>
+</div>
+
+{% endblock %}

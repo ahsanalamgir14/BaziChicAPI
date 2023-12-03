@@ -1,0 +1,32 @@
+{% extends 'layout_doc_viewer.twig' %}
+{% block slider %}
+<div id="titlebar">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Read E-Books Online Free</h2>
+				<nav id="breadcrumbs">
+					<ul><li><a href="{{ base_url() }}">Home</a></li>
+						<li><a href="{{ base_url() }}/read-e-books-online-for-free.html">Free E-Books</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="container">
+<div class="row">
+{% if page.data %}
+{% for document in page.data %}
+ <div class="_df_thumb" id="df_manual_thumb" source="{{base_url()}}/uploads/documents/{{document.link}}" 
+ thumb="{% if document.cover %}{{base_url()}}/uploads/images/docs/{{document.cover}}
+	 {% else %}{{base_url()}}/images/books/default.png{% endif %}"> {{document.title}}</div>
+{% endfor %}
+{% endif %}
+</div></div>
+{% endblock %}
+
+
+

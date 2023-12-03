@@ -1,0 +1,17 @@
+	<li {% if notification.status == "Pending" %} class="unread"{% endif %}>
+								<a href="{{notification.action_link}}">
+									<div class="message-avatar">
+									    {% if notification.sender_image %}				
+	<img id="cover_image_preview" src="{{base_url()}}/uploads/images/users/{{notification.sender_image}}?d=mm&amp;s=70">
+	{% else %}
+	 <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&amp;s=70" />
+    {% endif %}</div>
+
+	<div class="message-by"><div class="message-by-headline">
+											<h5>{{notification.title}} {% if notification.status == "Pending" %} <i>Unread</i> {% endif %}</h5>
+											<span>{{notification.date_created}}</span>
+										</div>
+										<p>{{notification.message}}</p>
+									</div>
+								</a>
+							</li>

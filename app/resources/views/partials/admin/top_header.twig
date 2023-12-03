@@ -1,0 +1,65 @@
+	<div id="header" class="not-sticky">
+		<div class="container">
+			<div class="left-side" style="width:70%;">
+				<div id="logo">
+					<a href="{{ base_url() }}" class="dashboard-logo"><img src="{{ base_url() }}/images/logo.png" alt="Bazichik - Chinese Metaphysics Consultancy"></a>
+				</div>
+
+				<!-- Mobile Navigation -->
+				<div class="mmenu-trigger">
+					<button class="hamburger hamburger--collapse" type="button">
+						<span class="hamburger-box">
+							<span class="hamburger-inner"></span>
+						</span>
+					</button>
+				</div>
+				<!-- Main Navigation -->
+				<nav id="navigation" class="style-1">
+					<ul id="responsive">
+					{# <li class="active"><a style="font-size: 18px;font-weight:500;" href="{{ base_url() }}/free-trial"> Free Trial</a></li> #}
+						{# <li><a style="font-size: 18px;font-weight:500;" href="{{ base_url() }}/free-trials-summary">  Free Trial</a></li> #}
+						<li><a style="font-size: 18px;font-weight:500;" href="http://192.168.56.1:3000/">  Free Trial</a></li>
+
+						<li class="active"><a style="font-size: 18px;font-weight:500;" href="{{ base_url() }}/e-book-store"> Browse</a></li>
+						<li><a style="font-size: 18px;font-weight:500;" href="{{ base_url() }}/contact"> Consultation</a></li>
+						<li><a style="font-size: 18px;font-weight:500;" href="{{ base_url() }}/frequently-asked-questions"> FAQ</a></li>
+					</ul>
+				</nav>
+				<div class="clearfix"></div>
+				<!-- Main Navigation / End -->
+				
+			</div>
+			<!-- Left Side Content / End -->
+
+			<!-- Right Side Content / End -->
+			<div class="right-side" style="width:30%;">
+				<!-- Header Widget -->
+				<div class="header-widget">
+					<div class="user-menu">
+{% if session.user_name and session.api_key %}
+<div class="user-name"><span>
+    {% if session.user_image %}
+    <img src="{{ base_url() }}/uploads/images/users/{{session.user_image}}">
+    {% else %}
+    <img src="{{ base_url() }}/images/avatar.jpg">
+    {% endif %}
+    </span>Hi {{session.first_name}}!</div>
+						<ul>
+							<li><a href="{{ base_url() }}/dashboard"><i class="fa fa-line-chart"></i> Dashboard</a></li>
+							<li><a href="{{ base_url() }}/notifications"><i class="fa fa-bell"></i> Notifications</a></li>
+							<li><a href="{{ base_url() }}/logout"><i class="sl sl-icon-power"></i> Logout</a></li>
+						</ul>
+					</div>
+					{% else %} 
+					<div class="header-widget">
+<a href="{{ base_url() }}/login" class="sign-in"><i class="sl sl-icon-login"></i> Signin Now</a>
+								</div>
+					{% endif %}
+					
+						
+				</div>
+				<!-- Header Widget / End -->
+			</div>
+			<!-- Right Side Content / End -->
+
+		</div>

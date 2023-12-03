@@ -1,0 +1,33 @@
+{% if page.membership_plans|length > 0 %}
+{% for row in page.membership_plans %}
+	<div class="plan {% if row.is_highlighted %}featured{% endif %}">
+	    {% if row.is_highlighted %}	<div class="listing-badge">
+						<span class="featured">Featured</span>
+					</div>{% endif %}
+					
+					
+					<div class="plan-price">
+						<h3 style="font-weight:bold;">{{row.title}}</h3>
+					
+						{% if row.price <= 0 %}
+						{% else %}
+							<span class="value"><span style="font-size: 30px;font-weight:600;">US$ {{row.price}}</span></span>
+						{% endif %}
+						
+						<span class="period">{{row.tagline}}</span>
+						
+						 {% if row.note %}
+						<span class="period" style="font-weight:bold;">{{row.note}}</span>{% endif %}
+					
+					</div>
+
+					<div class="plan-features">
+					    <p >{{row.membersip_desc | raw}}</p>
+						<a class="button {% if row.is_available ==1 %}{% else %}border{% endif %}"
+						 {% if row.is_available %}
+						href="{{base_url()}}/get-membership/{{row.qcode}}"{% else %}href="#"{% endif %}
+						>{{row.action_label}}</a>
+					</div>
+				</div>
+	 {% endfor %} 
+{% endif %}

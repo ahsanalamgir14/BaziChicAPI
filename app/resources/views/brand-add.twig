@@ -1,0 +1,59 @@
+{% extends 'admin_layout.twig' %}
+{% block content %}
+<div class="row">
+			<div class="col-lg-12">
+				<div id="add-listing">
+  <form role="form" method="POST" name="addBrandForm" id="addBrandForm" action="{{base_url()}}/firearms/brand/create">
+					<!-- Section -->
+					<div class="add-listing-section">
+
+						<!-- Headline -->
+						<div class="add-listing-headline">
+							<h3><i class="sl sl-icon-doc"></i> Create a New Firearm Brand</h3>
+						</div>
+
+{% if flash.getMessage('test') %}
+<div class="notification success closeable margin-bottom-30">
+<p><strong>{{ flash.getMessage('test') | first }}</strong></p>
+<a class="close"></a>
+</div>
+{% endif %}
+
+ 
+						<!-- Title -->
+						<div class="row with-forms">
+							<div class="col-md-12">
+								<h5>Brand Name <i class="tip" data-tip-content="Enter a name for Brand."></i></h5>
+								<input class="search-field" type="text" name="title" id="title" value="" placeholder="Brand name here"/>
+							</div>
+						</div>
+						
+					<div class="row with-forms">
+							<div class="col-md-12">
+								<h5>Brand Website (Optional) <i class="tip" data-tip-content="Enter the official website link for the firearm brand."></i></h5>
+								<input class="search-field" type="text" name="website" id="website" value="" placeholder="Brand Website Link"/>
+							</div>
+						</div>
+						
+							<input class="search-field" type="hidden" name="description" id="description" value=""/>
+							
+							<div class="row with-forms">
+							<div class="col-md-12">			
+						<h5>Select Status <i class="tip" data-tip-content="Select active if you want this to appear on website."></i></h5>
+								<select class="chosen-select-no-single" name="is_published" id="is_published">
+			<option label="blank" value="1">Active</option>	
+									<option label="blank" value="0">Not Active</option>	
+			
+								</select>
+</div></div>			
+							
+						<button type="submit" class="button preview"> <i class="fa fa-arrow-circle-right"></i> Add Brand</button>
+						
+					</div>
+					<!-- Section / End -->
+                    </form>
+				</div>
+			</div>
+		</div>
+		
+{% endblock content %}

@@ -1,0 +1,73 @@
+{% extends 'admin_layout.twig' %}
+{% block content %}
+<div class="row">
+			<div class="col-lg-12">
+				<div id="add-listing">
+  <form role="form" name="updateCategoryForm" id="updateCategoryForm" action="{{base_url()}}/categories/update" method="POST">
+					<!-- Section -->
+					<div class="add-listing-section">
+
+						<!-- Headline -->
+						<div class="add-listing-headline">
+							<h3><i class="sl sl-icon-doc"></i> Update Category</h3>
+						</div>
+ 
+						<!-- Title -->
+						<div class="row with-forms">
+							<div class="col-md-12">
+								<h5>Category Name * <i class="tip" data-tip-content="Enter a name for Category."></i></h5>
+								<input class="search-field" type="text" name="title" id="title" value="{{category.title}}"/>
+							</div>
+						</div>
+						
+							<div class="row with-forms">
+							<div class="col-md-12">
+								<h5>Taxonomy Name <i class="tip" data-tip-content="Enter a taxonomy for Category."></i></h5>
+								<input class="search-field" type="text" name="taxonomy" id="taxonomy" value="{{category.taxonomy}}"/>
+							</div>
+						</div>
+						
+							<div class="row with-forms">
+							<div class="col-md-12">
+								<h5>Short Description <i class="tip" data-tip-content="Enter description for Category."></i></h5>
+								<textarea class="WYSIWYG" name="description" cols="40" rows="2" id="description" spellcheck="true" 
+								placeholder="A short description about this category">{{category.description}}</textarea>
+							</div>
+						</div>
+					
+							<input type="hidden" name="qcode" id="qcode" value="{{category.qcode}}"/>
+							<input type="hidden" name="category_id" id="category_id" value="{{category.category_id}}"/>
+							
+						
+			
+<div class="row with-forms">
+							<div class="col-md-12">			
+						<h5>Select Status <i class="tip" data-tip-content="Select active if you want this to appear on website."></i></h5>
+								<select class="chosen-select-no-single" name="is_published" id="is_published">
+			{% if category.is_published > 0 %}
+			<option label="blank" value="1">Active</option>	
+									<option label="blank" value="0">Not Active</option>	
+            {% else %} 
+		<option label="blank" value="0">Not Active</option>	
+		<option label="blank" value="1">Active</option>	
+            {% endif %}
+			
+								</select>
+</div></div>								
+			
+			
+							<div class="checkboxes in-row margin-bottom-20">
+							<input id="check-a" type="checkbox" name="magazine_only" value="1" {% if category.magazine_only > 0 %}checked{% endif %}>
+							<label for="check-a">Enable this category for magazines only.</label>
+						</div>
+										
+						<button type="submit" class="button preview"> <i class="fa fa-arrow-circle-right"></i> Update Category</button>
+						
+					</div>
+					<!-- Section / End -->
+                    </form>
+				</div>
+			</div>
+		</div>
+		
+{% endblock content %}

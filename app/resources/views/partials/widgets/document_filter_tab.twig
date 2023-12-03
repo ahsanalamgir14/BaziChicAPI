@@ -1,0 +1,73 @@
+<section class="fullwidth margin-top-65 padding-top-75 padding-bottom-70" data-background-color="#f8f8f8">
+
+	<div class="">
+		<div class="row grid-container clearfix">
+			<div class="col-md-12">
+			    <div id="shop" class="row clearfix">
+			        
+			    <div class="style-3 text-center">
+				<!-- Tabs Navigation -->
+				<ul class="tabs-nav">
+					<li class="active"><a href="#tab_new_release">WHAT'S NEW?</a></li>
+					<li><a href="#tab_magazines">MAGAZINES ({{page.allMagazines|length}})</a></li>
+					<li><a href="#tab_coming">E-BOOKS ({{page.ebooks|length}})</a></li>
+				</ul>
+
+				<!-- Tabs Content -->
+<div class="tabs-container">
+<div class="tab-content" id="tab_new_release">
+	{% include 'partials/widgets/new_releases.twig' %}
+	</div>
+					
+<div class="tab-content" id="tab_magazines">
+
+{% if page.allMagazines|length > 0 %}
+<div class="row" style="padding-left:30px;padding-right:30px;">
+{% for document in page.allMagazines %}
+<div class="col-md-3 col-sm-12">
+{% include 'partials/widgets/ebookrow.twig' %}
+</div>
+{% endfor %}
+</div>
+{% else %}
+<div style="display:block;padding:40px;width:100%;margin:0 auto;text-align:center;">
+    <h1><i class="sl sl-icon-layers"></i></h1>
+    <h3>No Magazine to show. Check back again.</h3>
+    </div>
+{% endif %}
+
+				</div>
+
+					<div class="tab-content" id="tab_coming">
+
+{% if page.ebooks|length > 0 %}
+<div class="row" style="padding-left:30px;padding-right:30px;">
+{% for document in page.ebooks %}
+	<!-- Listing Item -->
+				<div class="col-md-3 col-sm-12">
+			{% include 'partials/widgets/ebookrow.twig' %}
+				</div>
+				<!-- Listing Item / End -->
+{% endfor %}
+</div>
+{% else %}
+<div style="display:block;padding:40px;width:100%;margin:0 auto;text-align:center;">
+    <h1><i class="sl sl-icon-book-open"></i></h1>
+    <h3>No E-Book to show. Check back again.</h3>
+    </div>
+{% endif %}
+
+					</div>
+				</div>
+
+			</div>
+			
+				
+					</div>
+			</div>
+
+		</div>
+	</div>
+
+</section>
+<!-- Fullwidth Section / End -->

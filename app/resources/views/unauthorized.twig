@@ -1,0 +1,34 @@
+{% extends 'layout.twig' %}
+{% block content %}
+<div class="container">
+
+	<div class="row">
+		<div class="col-md-12">
+
+			<section class="center" style="text-align:center;margin:25px;padding:30px;background-color:#eee;">
+				<h1 style="color:#666;font-size:72px;line-height:75px;font-weight:bold;">
+				<i class="sl sl-icon-lock sl-3x"></i>
+				</h1>
+				<p><strong>Looks like you are not authorized to access this page.</strong></p>
+<hr>
+				<div class="row" style="margin:20px;">
+					<div class="col-lg-8 col-lg-offset-2">
+						<a href="{{base_url()}}" class="button"><i class="sl sl-icon-home"></i> Go to Home page</a>
+						
+						
+{% if session.userID > 0 %} 
+	<a href="{{base_url()}}/dashboard" class="button"><i class="sl sl-icon-rocket"></i> My Dashboard</a>
+{% endif %}
+					</div>
+				</div>
+				<!-- Search Section / End -->
+
+
+			</section>
+
+		</div>
+	</div>
+
+</div>
+<!-- Container / End -->
+{% endblock content %}

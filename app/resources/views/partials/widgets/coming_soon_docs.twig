@@ -1,0 +1,12 @@
+<p>Display coming soon</p>
+<div class="simple-slick-carousel dots-nav">
+{% if page.data %}
+{% for document in page.data %}
+	<!-- Listing Item -->
+				<div class="carousel-item">
+						{% include 'partials/widgets/ebookrow.twig' %}
+				</div>
+				<!-- Listing Item / End -->
+{% endfor %}
+{% endif %}
+</div>

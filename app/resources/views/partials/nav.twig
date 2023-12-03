@@ -1,0 +1,85 @@
+ <div class="row"> 	
+			<!-- Left Side Content -->
+			<div class="col-md-8 col-sm-9 col-lg-5" style="float:left;display: inline-block;">
+				
+				<!-- Logo -->
+				<div id="logo">
+					<a href="{{ base_url() }}"><img src="{{ base_url() }}/images/logo.png" alt="BaziChic Chinese Metatphysics Consultancy" style="max-height: 60px;margin-top: 0px;margin-bottom: 0px;"></a>
+				</div>
+
+				<!-- Mobile Navigation -->
+				<div class="mmenu-trigger">
+					<button class="hamburger hamburger--collapse" type="button">
+						<span class="hamburger-box">
+							<span class="hamburger-inner"></span>
+						</span>
+					</button>
+				</div>
+
+
+				<!-- Main Navigation -->
+				<nav id="navigation" class="style-1" style="float: none;display: inline;">
+					<ul id="responsive">
+						<li class="active"><a style="font-size: 18px;font-weight:500;" href="{{ base_url() }}/e-book-store"> Browse</a></li>
+						<li><a style="font-size: 18px;font-weight:500;" href="{{ base_url() }}/contact"> Consultation</a></li>
+							<li><a style="font-size: 18px;font-weight:500;" href="{{ base_url() }}/frequently-asked-questions"> FAQs</a></li>
+						{#<li class="active"><a href="{{ base_url() }}/e-book-store"><i class="sl sl-icon-book-open"></i> Browse</a></li>#}
+						{#<li><a href="{{ base_url() }}/contact"> <i class="sl sl-icon-bubbles"></i> Consultation</a></li>#}
+						{#	<li><a href="{{ base_url() }}/frequently-asked-questions"> <i class="sl sl-icon-cursor"></i> FAQs</a></li>#}
+							
+				{#		 {% if session.first_name and  session.last_name and session.email %}#}
+				{#		  {% else %}#}
+    {#<li><a href="{{ base_url() }}/membership"> <i class="sl sl-icon-badge"></i> Subscribe</a></li>#}
+    {#{% endif %}#}
+						
+					</ul>
+				</nav>
+			
+				<!-- Main Navigation / End -->
+					</div>
+			<!-- Left Side Content / End -->
+			
+			
+			
+			<div class="col-lg-5 col-md-12 col-sm-12 hidden-xs" style="float:center;display: block;">
+				    {% include 'forms/noboot-search-form.twig' %}
+	  
+{#{% include 'partials/widgets/home_top_search.twig' %}#}
+</div>
+
+
+			
+			<!-- Right Side Content / End -->
+			<div class="col-md-4 col-sm-3 col-lg-2" style="float:right;text-align:right;display: inline-block;">
+				<div class="header-widget">
+				    {% if session.first_name and  session.last_name and session.email %}
+<div class="user-menu">
+<div class="user-name"><span>
+    {% if session.user_image %}
+    <img src="{{ base_url() }}/uploads/images/users/{{session.user_image}}">
+    {% else %}
+    <img src="{{ base_url() }}/images/avatar.jpg">
+    {% endif %}
+    </span>{{session.first_name}}</div>
+						<ul>
+							<li><a href="{{ base_url() }}/dashboard"><i class="fa fa-line-chart"></i> Dashboard</a></li>
+							<li><a href="{{ base_url() }}/notifications"><i class="fa fa-bell"></i> Notifications</a></li>
+							<li><a href="{{ base_url() }}/logout"><i class="sl sl-icon-power"></i> Logout</a></li>
+						</ul></div>
+{% else %}
+<a href="#sign-in-dialog" class="sign-in popup-with-zoom-anim"><i class="sl sl-icon-login"></i> Login</a>
+{% endif %}
+</div></div>
+<!-- Right Side Content / End -->	
+			
+			
+<!-- Sign In Popup -->
+<div id="sign-in-dialog" class="zoom-anim-dialog mfp-hide">
+				<div class="small-dialog-header">
+					<h3>Sign In</h3>
+				</div>
+				<div class="sign-in-form style-1">
+{% include 'forms/login_form.twig' %}
+				</div>
+			</div>
+			<!-- Sign In Popup / End -->

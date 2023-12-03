@@ -1,0 +1,63 @@
+<div id="footer" class="dark">
+	<!-- Main -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 col-sm-6">
+			<h4>About Bazichic</h4>
+				<p style="color:#ffffff;">BaZiChic is a Chinese Metaphysics consultancy, offering Feng Shui audit, BaZi consulting and Date Selection services. We aim to help you achieve a desirable life of happiness, pleasure, wealth and honour; in short, your eudaimon. We want to standby you in every stage of your life to offer assistance, comfort, advice and guidance, and work with you toward your goal. Your happiness and success is our priority.  </p><a href="{{ base_url() }}/about">Know more</a>
+			</div>
+
+			<div class="col-md-4 col-sm-6 ">
+				<h4>Helpful Links</h4>
+				<ul class="footer-links" style="width: 90%;">
+					<li><a href="{{ base_url() }}">Home</a></li>
+					<li><a href="{{ base_url() }}/about">About Us</a></li>
+					<li><a href="{{ base_url() }}/e-book-store">Discover</a></li>
+					<li><a href="{{ base_url() }}/subscription-plans">Subscription Plans</a></li>
+					<li><a href="{{ base_url() }}/contact">Contact Us</a></li>
+					<li><a href="{{ base_url() }}/testimonials">Testimonials</a></li>
+					  {% if session.first_name and  session.last_name and session.email %}
+<li><a href="{{ base_url() }}/profile"> My Profile</a></li>
+<li><a href="{{ base_url() }}/dashboard"> My Dashboard</a></li>
+<li><a href="{{ base_url() }}/logout"> Logout</a></li>
+{% else %}
+<li><a href="{{ base_url() }}/login"> Login</a></li>
+<li><a href="{{ base_url() }}/register"> Create your BaziChic Account</a></li>
+{% endif %}
+				
+				
+					
+				</ul>
+				<div class="clearfix"></div>
+			</div>		
+
+			<div class="col-md-4 col-sm-12">
+				<h4>Contact Us</h4>
+				<div class="text-widget">
+					<span><b>BaziChic Chinese Metatphysics Consultancy</b>, <br>Kuala Lumpur,
+Malaysia</span> <br>
+					Phone : <span style="color:#fff;">413-285-8989 </span><br>
+					E-Mail : <span> <a href="#">customer_support@bazichic.com</a> </span><br>
+				</span>
+				</div>
+				
+				<ul class="social-icons margin-top-20">
+					<li><a class="facebook" target="_blank" href="https://www.facebook.com/BaziChic"><i class="icon-facebook"></i></a></li>
+					{#<li><a class="twitter" target="_blank" href="https://www.twitter.com"><i class="icon-twitter"></i></a></li>#}
+				
+				</ul>
+			</div>
+
+		</div>
+		
+		<!-- Copyright -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="copyrights">© 2019 -2020 | <a href="#">BaziChic Chinese Metaphysics Consultancy</a> | All Rights Reserved.</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<!-- Footer / End -->

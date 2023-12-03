@@ -1,0 +1,45 @@
+{% extends 'layout.twig' %}
+{% block slider %} 
+{% endblock %}
+{% block content %}
+{% if booking.id %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+{% if session.role_id == 1 %}
+			<div class="booking-confirmation-page">
+				<h3 class="margin-top-30">Course : {{booking.course}}</h3>
+				<hr>
+				<h3 class="margin-top-30">Booking ID : {{booking.id}}</h3>
+				<h3 class="margin-top-30">Full Name : {{booking.first_name}} {{booking.last_name}}</h3>
+				<h3 class="margin-top-30">Email Address : {{booking.email}}</h3>
+				   {% if booking.phone %}					
+				    <h3 class="margin-top-30">Phone : {{booking.phone}}</h3>
+       {% endif %}
+				
+				   {% if booking.start_date %}					
+				     				<h3 class="margin-top-30">Booking Schedule : {{booking.start_date}} at {{booking.end_date}}</h3>
+
+       {% endif %}
+				<h3 class="margin-top-30">Booking Time : {{booking.date_created}}</h3>
+				{% if booking.note %}
+				<h3 class="margin-top-30">Note : {{booking.note}}</h3>
+				{% endif %}
+				<hr>
+				<p>An email with confirmation has been sent to {{booking.first_name}} {{booking.last_name}} at {{booking.email}}.</p>
+				<a href="{{ base_url() }}" class="button margin-top-30">Go To Home</a>
+			</div>
+{% else %}
+<div class="booking-confirmation-page">
+				<i class="fa fa-check-circle"></i>
+				<h2 class="margin-top-30">Thanks for booking!</h2>
+				<h3 class="margin-top-30">Booking ID : {{booking.id}}</h3>
+				<p>Hi {{booking.first_name}} ! Your booking for the course - {{booking.course}} is completed. You'll receive a confirmation email at {{booking.email}}.</p>
+				<a href="{{ base_url() }}" class="button margin-top-30">Go To Home</a>
+			</div>
+{% endif %}
+		</div>
+	</div>
+</div>
+{% endif %}
+{% endblock %}

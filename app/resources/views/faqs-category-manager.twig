@@ -1,0 +1,247 @@
+{% extends 'admin_layout.twig' %}
+{% block jstriggers %}
+{#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">#}
+<link rel="stylesheet" href="{{ base_url() }}/css/custom-bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+<script type="text/javascript" src=" https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript">
+ $(document).ready(function() {
+    // parseDoc();
+     //var authorization = '{{ session.api_key }}';
+    //alert("authorization: "+authorization);
+     $('#example').DataTable();
+     
+     
+$('.deleteFAQCategory').click(function (e) {
+    e.preventDefault();
+	var category_id = $(this).attr("data-id");
+  swal({
+  title: 'Delete FAQ category',
+  text: "Are you sure you want to delete this FAQ category?",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Confirm Delete'
+}).then((result) => {
+  if (result.value) {
+	var formData = {'id':category_id};
+    $.ajax({
+        url: base_url+"/apis/faqCategories/delete",
+        type: "POST",
+        data: formData,
+         beforeSend: function(request) {
+               request.setRequestHeader("Authorization", authorization);
+             },
+		dataType: 'json',
+        success: function(data) {
+		if(data.error){
+		swal({
+  title: 'Failed To Delete',
+  html: '<b>'+data.message+'</b>',
+  type: 'error',
+  showCancelButton: false,
+  confirmButtonColor: '#3085d6',
+  focusConfirm: false
+});
+		}else{
+setTimeout(function(){
+window.location.replace(base_url+'/faqs-category-manager');
+}, 2200);
+		}
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+		alert("There was an error.");
+      }
+    });
+	/********** End of  Operation *********/
+  }
+});  
+});
+
+
+$('.deleteFAQSubCategory').click(function (e) {
+    e.preventDefault();
+	var category_id = $(this).attr("data-id");
+  swal({
+  title: 'Delete FAQ Sub-category',
+  text: "Are you sure you want to delete this FAQ Sub-category?",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Confirm Delete'
+}).then((result) => {
+  if (result.value) {
+	var formData = {'id':category_id};
+    $.ajax({
+        url: base_url+"/apis/faqSubCategories/delete",
+        type: "POST",
+        data: formData,
+         beforeSend: function(request) {
+               request.setRequestHeader("Authorization", authorization);
+             },
+		dataType: 'json',
+        success: function(data) {
+		if(data.error){
+		swal({
+  title: 'Failed To Delete',
+  html: '<b>'+data.message+'</b>',
+  type: 'error',
+  showCancelButton: false,
+  confirmButtonColor: '#3085d6',
+  focusConfirm: false
+});
+		}else{
+setTimeout(function(){
+window.location.replace(base_url+'/faqs-category-manager');
+}, 2200);
+		}
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+		alert("There was an error.");
+      }
+    });
+	/********** End of  Operation *********/
+  }
+});  
+});
+
+});
+</script>
+<style>
+.table > tbody > tr > td{
+font-size:14px;
+color:#222222;
+}
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="row">
+<div class="col-md-6">
+<div class="clearfix"></div>
+<h2 style="color:#333333;">FAQs Categories Manager</h2> 						
+						<div class="clearfix"></div>
+					</div>
+
+					<div class="col-md-6" style="text-align:right;">
+<a style="font-weight:bold;" href="{{base_url()}}/add-faq-category" class="button border with-icon">Add Category <i class="sl sl-icon-plus"></i></a>
+<a style="font-weight:bold;" href="{{base_url()}}/add-faq-subcategory" class="button border with-icon">Add Sub-Category <i class="sl sl-icon-plus"></i></a>
+					</div>
+				</div>
+<hr>				
+<div class="row clearfix margin-bottom-20">
+<div class="col-lg-12 col-md-12">`
+ {% if page.categories|length > 0 %}
+   <div class="row clearfix">
+    	<div class="col-lg-12 col-md-12">
+    	    
+<div class="add-review-box style-2" style="background-color:white;margin-top: 5px;">
+{% for row in page.categories %}
+				<!-- Toggle 1 -->
+				<div class="toggle-wrap">
+					<span class="trigger active"><a style="color:#333333;" href="#">{{row.title}} ({{row.numCategories}}) <i class="sl sl-icon-plus"></i></a></span>
+					<div class="toggle-container" style="display: block;">
+					     {% if row.subcategories|length > 0 %}
+					     <table class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+              <th>#</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>FAQs</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+					    {% for rowdata in row.subcategories %}
+					     <tr>
+                <td>{{rowdata.id}}</td>
+                <td>{{rowdata.title}}</td>
+                <td>{{rowdata.category}}</td>
+                <td>{{rowdata.numFaqs}}</td>
+                <td>
+                    <a href="{{base_url()}}/edit-faq-subcategory/{{rowdata.id}}" class="" style="padding: 8px 14px;font-size:18px;font-weight:bold;"><i class="sl sl-icon-note"></i> </a>
+					<a data-id="{{rowdata.id}}" class="deleteFAQSubCategory" style="padding: 8px 14px;font-size:18px;font-weight:bold;"><i class="sl sl-icon-trash"></i> </a>
+				</td>
+            </tr>
+					    {% endfor %}
+					    </tbody></table>
+					    {% endif %}
+					    
+					</div>
+				</div>
+{% endfor %}
+			</div>
+			
+			
+			
+
+</div></div>
+            {% endif %}
+   
+   
+   		
+
+<div class="row" style="margin-top:30px;">
+<div class="col-md-12">
+<div class="clearfix"></div>
+<h2 style="margin-top:20px;color:#333333;">Main Categories</h2> 						
+<div class="clearfix"></div>
+</div></div>
+				
+				
+ {% if page.categories|length > 0 %}
+   <div class="row clearfix">
+    	<div class="col-lg-12 col-md-12">
+    <table id="example" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+              <th>#</th>
+                <th>Title</th>
+                <th>FAQs</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+             {% for row in page.categories %}
+            <tr>
+                <td>{{row.id}}</td>
+                <td>{{row.title}}</td>
+                <td>{{row.numFaqs}}</td>
+                  <td>
+                    <a href="{{base_url()}}/edit-faq-category/{{row.id}}" class="" style="padding: 8px 14px;font-size:18px;font-weight:bold;"><i class="sl sl-icon-note"></i> </a>
+					<a data-id="{{row.id}}" class="deleteFAQCategory" style="padding: 8px 14px;font-size:18px;font-weight:bold;"><i class="sl sl-icon-trash"></i> </a>
+				</td>
+            </tr>
+           {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+              <th>#</th>
+                <th>Title</th>
+                <th>FAQs</th>
+                <th>Action</th>
+            </tr>
+        </tfoot>
+    </table>
+</div></div>
+            {% else %}
+			 <section style="margin: 40px 0 80px 0;text-align: center;" class="center">
+				<h2 style="text-align: center;
+    font-size: 100px;
+    line-height: 110px;
+    font-weight: 500;"><i class="fa fa-info"></i></h2>
+				<h4>NO FAQ CATEGORIES LISTED</h4>
+			</section>
+            {% endif %}
+ 
+ 
+ 
+          
+            
+			</div>		
+{% endblock %}

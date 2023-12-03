@@ -1,0 +1,89 @@
+{% extends 'admin_layout.twig' %}
+{% block content %}
+<!-- Print Button -->
+<a href="javascript:window.print()" class="print-button">Print this invoice</a>
+
+<!-- Invoice -->
+<div id="invoice">
+
+	<!-- Header -->
+	<div class="row">
+		<div class="col-md-6">
+			<div id="logo"><img src="{{base_url()}}/images/logo.png" style="max-height: 86px;"></div>
+		</div>
+
+		<div class="col-md-6">	
+
+			<p id="details" style="color:#444444;font-weight:bold;">
+				<strong style="color:#333333;">Order ID :</strong> #{{page.membershipEntry.qcode}} <br>
+				<strong style="color:#333333;">Purchase Date :</strong> {{page.dateOfSubscription}}
+			</p>
+		</div>
+	</div>
+
+
+	<!-- Client & Supplier -->
+	<div class="row">
+		<div class="col-md-12">
+			<h2>Invoice</h2>
+		</div>
+
+		<div class="col-md-6">	
+			<strong class="margin-bottom-5">Business</strong>
+			<p style="color:#333333;font-weight:bold;">
+				Bazichic Chinese Metaphysics Consulting <br>
+				Kuala Lumpur, Malaysia <br>
+			</p>
+		</div>
+
+		<div class="col-md-6">	
+			<strong class="margin-bottom-5">Customer</strong>
+			<p style="color:#333333;font-weight:bold;">
+			{{page.thisUser.first_name}} {{page.thisUser.last_name}}<br>
+			</p>
+		</div>
+	</div>
+
+
+	<!-- Invoice -->
+	<div class="row">
+		<div class="col-md-12">
+			<table class="margin-top-20">
+				<tr>
+					<th>Service Description</th>
+					<th>TXN ID</th>
+					<th>Amount</th>
+				</tr>
+
+				<tr style="margin-top:10px;">
+					<td style="color:#333333;font-weight:bold;">{{page.transactionEntry.item_code}} Subscription Plan</td> 
+					<td style="color:#333333;font-weight:bold;">{{page.transactionEntry.txn_id}}</td>
+					<td style="color:#333333;font-weight:bold;">{{page.transactionEntry.currency_code}} {{page.transactionEntry.amount}}</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div class="col-md-4 col-md-offset-8">	
+			<table id="totals">
+				<tr>
+					<th>Total Amount Paid</th> 
+					<th><span style="color:#333333;font-weight:bold;">{{page.transactionEntry.currency_code}} {{page.transactionEntry.amount}}</span></th>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+
+	<!-- Footer -->
+	<div class="row">
+		<div class="col-md-12">
+			<ul id="footer">
+				<li style="color:#444444;font-weight:bold;"><span>www.bazichic.com</span></li>
+				<li style="color:#444444;font-weight:bold;">customer_support@bazichic.com</li>
+				<li style="color:#444444;font-weight:bold;">413-285-8989</li>
+			</ul>
+		</div>
+	</div>
+		
+</div>
+{% endblock content %}

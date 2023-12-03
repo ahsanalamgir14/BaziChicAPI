@@ -1,0 +1,48 @@
+{% extends 'admin_layout.twig' %}
+{% block content %}
+<div class="row">
+	<div class="right-side">
+				<div class="header-widget">
+					<a href="{{base_url()}}/categories/add" class="button border with-icon"><b>Add New Category <i class="sl sl-icon-plus"></i></b></a>
+				</div>
+			</div>		
+<div class="clearfix"></div>
+
+{% if page.data %}
+            {% for row in page.data %}
+				<!-- Listing Item -->
+				<div class="col-lg-4 col-md-4">
+					<div class="listing-item-container list-layout" style="background-color:#ffffff;">
+						<div class="listing-item">
+							<!-- Content -->
+							<div class="">
+{% if row.is_published > 0 %}
+<div class="listing-badge now-open">Published</div>
+{% else %}
+<div class="listing-badge now-open">Draft</div>
+{% endif %}
+								<div class="listing-item-inner">
+									<h4>{{row.title}}</h4>
+								   <p><span>{{row.date_created}}</span></p>
+								   <hr>
+								   
+									<a href="{{base_url()}}/edit-category/{{row.id}}" class="button"><i class="sl sl-icon-note"></i></a>
+									
+									<a data-id="{{row.id}}" class="button deleteCategory"><i class="sl sl-icon-trash"></i></a>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Listing Item / End -->
+ {% endfor %} 
+            {% else %}
+			<div style="text-align: center;padding: 40px 0;">
+				<h1><i class="fa fa-pencil"></i></h1>
+				<h3 class="margin-top-10">Hi {{session.first_name}}! Looks like you have not added any category yet.</h3>
+				<a href="{{base_url()}}/categories/add" class="button margin-top-20 margin-bottom-20"><i class="fa fa-plus"></i>Create Category</a>		
+			</div>
+            {% endif %}
+			</div>		
+{% endblock content %}

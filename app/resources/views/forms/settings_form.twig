@@ -1,0 +1,82 @@
+	 <div id="settings_overlay" style="display:none;border-radius: 3px 3px 0 0;">
+					<div style="padding: 60px; text-align: center;">
+					<img src="images/finding.gif" width="64"/>
+					<h4 style="color:#333;margin-top:30px;"><strong>Saving settings</strong></h4>
+					<h5 style="color:#444;">Please wait...</h5>
+					</div>				
+					</div>
+					<form role="form" name="siteConfigForm" id="siteConfigForm" action="{{base_url()}}/settings/update" method="POST">
+						<!-- Details -->
+						<div class="my-profile">
+							<!-- Row -->
+						<div class="row with-forms">
+							<div class="col-md-6">
+								<h5>Site Name <i class="tip" data-tip-content="Name of website"></i></h5>
+								<input type="text" name="name" id="name" placeholder="" value="{{page.settings.name}}" required>
+							</div>
+							<div class="col-md-6">
+								<h5>Contact Email <i class="tip" data-tip-content="Required to send contact form messages."></i></h5>
+								<input type="text" name="email" id="email" placeholder="Admin Email Address" value="{{page.settings.email}}">
+							</div>
+
+						</div>
+						<!-- Row / End -->
+						
+						
+							<!-- Row -->
+						<div class="row with-forms">
+							<div class="col-md-6">
+								<h5>Pay Key <i class="tip" data-tip-content="Enter Pay Key"></i></h5>
+								<input type="text" name="pay_key" id="pay_key" placeholder="Enter Pay Key" value="{{page.settings.pay_key}}">
+							</div>
+							<div class="col-md-6">
+								<h5>Pay Secret <i class="tip" data-tip-content="Enter Pay Secret"></i></h5>
+								<input type="text" name="pay_secret" id="pay_secret" placeholder="Enter Pay Secret" value="{{page.settings.pay_secret}}">
+							</div>
+
+						</div>
+						<!-- Row / End -->
+						
+					
+						
+						<input type="hidden" name="latitude" id="latitude" placeholder="Latitude for maps" value="{{page.settings.latitude}}">
+						<input type="hidden" name="longitude" id="longitude" placeholder="Longitude for maps" value="{{page.settings.longitude}}">
+						<input type="hidden" name="address" id="address" value="{{page.settings.address}}"/>
+						
+	                    <!-- Row -->
+						<div class="row with-forms">
+							<div class="col-md-6">
+								<h5><i class="fa fa-twitter"></i> Twitter Link</h5>
+								<input placeholder="https://www.twitter.com/" type="text" value="{{page.settings.twitter_link}}" name="twitter_link" id="twitter_link">
+
+							</div>
+							<div class="col-md-6">
+								<h5><i class="fa fa-facebook-square"></i> Facebook Link</h5>
+								<input placeholder="https://www.facebook.com/" type="text" value="{{page.settings.facebook_link}}" name="facebook_link" id="facebook_link">
+							</div>
+
+						</div>
+						<!-- Row / End -->
+						
+	<div class="row">
+						<div class="col-md-12">
+					<div class="checkboxes in-row margin-bottom-10">
+							<input id="enable_member_uploads" type="checkbox" name="enable_member_uploads" value="1" {% if page.settings.enable_member_uploads > 0 %}checked{% endif %} />
+							<label for="enable_member_uploads" style="color:#333333;">Allow members to upload documents.</label>
+						</div>
+							</div>
+						</div>
+						
+							<div class="row">
+						<div class="col-md-12">
+					<div class="checkboxes in-row margin-bottom-10">
+							<input id="maintenance_on" type="checkbox" name="maintenance_on" value="1" {% if page.settings.maintenance_on > 0 %}checked{% endif %} />
+							<label for="maintenance_on" style="color:#333333;">Put the website in maintenance mode.</label>
+						</div>
+							</div>
+						</div>
+						
+						</div>
+	
+						<button type="submit" class="button margin-top-15">Save Changes</button>
+                    </form>

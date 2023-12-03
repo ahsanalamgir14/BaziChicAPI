@@ -1,0 +1,48 @@
+			<!-- Listing Nav -->
+			<div id="listing-nav" class="listing-nav-container">
+				<ul class="listing-nav">
+					<li><a href="#listing-overview" class="active">Description</a></li>
+					<li><a href="#listing-author">About Author</a></li>
+					<li><a href="#listing-reviews">Reviews</a></li>
+					<li><a href="#add-review">Add Review</a></li>
+				</ul>
+			</div>
+			
+			<!-- Overview -->
+			<div id="listing-overview" class="listing-section">
+             <p>{{document.description}}</p>
+				<h4 class="listing-desc-headline"> {{document.doc_type}} Details</h4>
+				<ul class="listing-features margin-top-0">
+				    <li><i class="sl sl-icon-tag"></i> Category: {{document.category}}</li>
+					<li><i class="sl sl-icon-info"></i> Code: {{document.qcode}}</li>
+					{% if document.num_pages > 0 %}
+						<li><i class="sl sl-icon-book-open"></i> Total Pages: {{document.num_pages}}</li>
+					{% endif %}
+				
+					{% if document.num_likes > 0 %}
+					<li><i class="sl sl-icon-heart"></i> Liked by {{document.num_likes}} People</li>
+					{% endif %}
+					
+					{% if document.read_time > 0 %}<li><i class="im im-icon-Timer-2"></i> Read Time: {{document.read_time}} Minutes</li>{% endif %}
+					{% if document.listen_time > 0 %}<li><i class="im im-icon-Hipster-Headphones"></i> Listen Time: {{document.listen_time}} Minutes</li>{% endif %}
+				</ul>
+			</div>
+		
+			<!-- Author -->
+			<div id="listing-author" class="listing-section">
+				<h3 class="listing-desc-headline margin-top-60 margin-bottom-30">About The Author</h3>
+                
+				<div id="singleListingMap-container">
+				 <p style="font-weight:500;">{{document.author_name}}</p>
+				{% if document.author_link %}<a href="{{document.author_link}}" target="_blank" class="button"><i class="fa fa-link"></i> Read More</a>{% endif %}
+				</div>
+			</div>
+				
+	<!-- Reviews -->
+	{% include 'partials/widgets/list_doc_reviews.twig' %}
+
+	<!-- Add Review Box -->
+	<div id="add-review" class="add-review-box">
+	{% include 'forms/dialog_document_review_form.twig' %}
+	</div>
+	<!-- Add Review Box / End -->

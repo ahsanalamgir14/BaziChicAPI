@@ -1,0 +1,37 @@
+ <div id="login_overlay" style="display:none;">
+					<div style="margin: 30px; text-align: center;">
+					<img src="{{base_url()}}/images/preloader.gif" width="60"/>
+					<h4><strong>Authenticating...</strong></h4>
+					<h5>Please wait...</h5>
+					<div id="login_msg"></div>
+					</div>	
+					</div>
+					
+ <form method="POST" action="{{base_url()}}/login_controller" class="login" name="loginForm" id="loginForm">
+<div class="text-center">
+					<p style="color:#333;font-weight:500;">Signin to access thousands of E-Books, Audio Books and Magazines brought to you by BaziChik. Don't have an account yet! <a href="{{base_url()}}/register">Register here.</a></p>
+				</div>
+								<p class="form-row form-row-wide">
+									<label for="email">Email:
+										<i class="im im-icon-Male"></i>
+										<input type="email" class="input-text" name="email" id="email" placeholder="Your registered email" required />
+									</label>
+								</p>
+
+								<p class="form-row form-row-wide">
+									<label for="password">Password:
+										<i class="im im-icon-Lock-2"></i>
+										<input class="input-text" type="password" name="password" id="password" placeholder="Your Password" required />
+									</label>
+									
+								</p>
+								
+							<div class="form-row text-left">
+								<a href="{{base_url()}}/password-recovery" class="" style="text-decoration:underline;font-weight:500;cursor: pointer;"><label>Password Recovery</label></a>
+								</div>
+
+								<div class="form-row text-right">
+									<button type="submit" class="button margin-top-10"><i class="fa fa-unlock-alt"></i> Log In </a>
+								</div>
+								
+							</form>

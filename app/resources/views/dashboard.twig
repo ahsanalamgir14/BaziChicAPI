@@ -1,0 +1,392 @@
+{% extends 'admin_layout.twig' %}
+{% block content %}
+		<!-- Notice -->
+		{% if page.warning %}
+		<div class="row">
+			<div class="col-md-12">
+				<div class="notification success closeable margin-bottom-30">
+					<h5><strong><i class="fa fa-bell"></i> ALERT </strong></h5>
+					<p><strong>{{page.warning|raw}}  </strong></p>
+					<a class="close" href="#"></a>
+				</div>
+			</div>
+		</div>{% endif %}
+	
+		<!-- Notice -->
+		{% if page.trialMessage %}
+		<div class="row">
+			<div class="col-md-12">
+				<div class="notification success margin-bottom-30">
+					<h5><strong><i class="fa fa-bell"></i> ATTENTION </strong></h5>
+					<p><strong>{{page.trialMessage|raw}}  </strong></p>
+				</div>
+			</div>
+		</div>{% endif %}
+
+		{% if page.thisUser.type == 'Åffiliate' %}
+		  <!-- Start Affiliate Content -->
+		  <div class="row">
+			<div class="col-lg-6">
+			    <div class="bazicard">
+           <div class="bazicard" style="margin-bottom:20px;"> 
+		 <div style="padding: 20px 20px 20px 20px;text-align: center;" class="center firstTour">
+				<h1 style="text-align: center;font-weight: 500;font-size:50px;margin-top:0px;"><i class="im im-icon-Conference"></i></h1>
+				<h3 style="text-align:center;">Start as an Affiliate</h3>
+				<h4>Generate referrals code that you can share with anyone. Win reward points and credits that you will redeem with Bazichic.</h4>
+    <div class="text-center margin-top-20 margin-bottom-20" style="display:inline-block;"> 
+				<a style="display:inline-block;" id="startTourBtn" class="button button-3d button-green" type="submit"> 
+							<i class="fa fa-arrow-circle-right"></i> Start Tour</a>
+							
+		<a href="{{base_url()}}/my-connections" class="button button-dark" style="display:inline-block;"><i class="fa fa-edit"></i>My Referrals</a>	
+		
+							
+        </div></div></div>
+</div>
+
+
+</div>
+
+             <div class="col-lg-6">
+                  <div class="bazicard secondTour" style="margin-bottom:20px;">
+                      <div style="padding: 20px 20px 20px 20px;text-align: center;">
+                 	<div style="text-align: center;padding: 0px 0;">
+				<h1 style="text-align: center;font-weight: 500;font-size:50px;margin-top:0px;"><i class="fa fa-code"></i></h1>
+				<h3 style="text-align:center;">Generate Referral Code</h3>
+					
+		<h4>Create a referral code that you can share with anyone. Earn affiliate benefits when users register using your code.</h4>
+			<form role="form" method="POST" name="createReferralForm" id="createReferralForm" action="{{base_url()}}/referrals/create">
+            <input type="hidden" value="{{session.userID}}" name="user_id" id="user_id">
+							<button class="button button-3d button-rounded button-small button-green  margin-top-20 margin-bottom-20" type="submit"> 
+							<i class="fa fa-arrow-circle-right"></i> Generate Code Now</button>
+        </form>
+        
+			</div>
+			</div>
+                 </div>
+				</div>
+					
+		</div>
+		 <!-- End of Affiliate Content -->
+		{% endif %}
+		
+		
+		
+		{% if page.thisUser.type == 'Åffiliate' %}
+		  <!-- Start Affiliate Content -->
+		  <div class="row">
+			<div class="col-lg-12">
+			    <div class="bazicards">
+						{% if page.my_connections %}
+						<div class="table table-responsive" style="margin-top:20px;">
+						<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th>S.No.</th>
+									<th>Name</th>
+									<th>Referral Code</th>
+									<th>Date Joined</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th>S.No.</th>
+									<th>Name</th>
+									
+									<th>Referral Code</th>
+									<th>Date Joined</th>
+								</tr>
+							</tfoot>
+							<tbody>
+							 {% for row in page.my_connections %}
+						<tr>
+						<td>{{loop.index0 +1}}</td>
+						<td>{{row.first_name}} {{row.last_name}}</td>
+						
+						<td>{{row.referral_code}}</td>
+						<td>{{row.date_created}}</td>
+								</tr>
+			 {% endfor %}
+				</tbody></table>
+					</div> 
+            
+</div></div></div>
+{% endif %}
+        
+        <div class="clear"></div>
+        {% if page.my_referral_codes|length > 0 %}
+        <div class="row" style="margin-top:10px;">
+<div class="col-lg-12 center">
+						<div class="table-responsive" style="margin-top:20px;">
+						<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%" style="background-color:#ffffff;">
+							<thead>
+								<tr>
+									<th>CODE</th>
+									<th>Date Generated</th>
+									<th>Total Redeems</th>
+									<th>Share Code</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th>CODE</th>
+									<th>Date Generated</th>
+									<th>Total Redeems</th>
+									<th>Share Code</th>
+								</tr>
+							</tfoot>
+							<tbody>
+							 {% for coderow in page.my_referral_codes %}
+							  {% include 'partials/widgets/referral-code-widget.twig' %}
+			 {% endfor %}
+					
+							
+							</tbody>
+						</table>
+						<p>Note: Copy the code to share with someone you refer. You can also share your code on social networks and whatsApp group. </p>
+					</div> 
+            {% endif %}
+    
+</div></div></div>
+{% endif %}
+
+
+		 <!-- End of Affiliate Content -->
+	
+		
+		<!-- Content -->
+		<div class="row">
+
+			<!-- Item -->
+			<div class="col-lg-3 col-md-6">
+			    <a href="{{base_url()}}/saved-reads">
+				<div class="dashboard-stat color-bazi" class="custTour1">
+					<div class="dashboard-stat-content"><h4 style="color:#ffffff;">{{page.num_saves}} </h4> <span style="color:#ffffff;">My Saved Reads</span></div>
+					<div class="dashboard-stat-icon"><i style="color:#ffffff;" class="im im-icon-Data-Cloud"></i></div>
+				</div></a>
+			</div>
+	
+				<!-- Item -->
+			<div class="col-lg-3 col-md-6">
+			     <a href="{{base_url()}}/manage-reviews">
+				<div class="dashboard-stat color-bazi" class="custTour2">
+					<div class="dashboard-stat-content"><h4 style="color:#ffffff;">{{page.num_reviews}} </h4> <span style="color:#ffffff;">My Reviews</span></div>
+					<div class="dashboard-stat-icon"><i style="color:#ffffff;" class="sl sl-icon-speech"></i></div>
+				</div></a>
+			</div>
+			
+			<!-- Item -->
+			<div class="col-lg-3 col-md-6">
+			    <a href="{{base_url()}}/bookmarks">
+				<div class="dashboard-stat color-bazi" class="custTour3">
+					<div class="dashboard-stat-content"><h4>{{page.num_likes}} </h4> <span style="color:#ffffff;">My Favourites</span></div>
+					<div class="dashboard-stat-icon"><i style="color:#ffffff;" class="im im-icon-Love-User"></i></div>
+				</div></a>
+			</div>
+			<!-- Item -->
+			<div class="col-lg-3 col-md-6">
+			    <a href="{{base_url()}}/reward-points">
+				<div class="dashboard-stat color-bazi" class="custTour4">
+					<div class="dashboard-stat-content"><h4>{{page.reward_points}} </h4> <span style="color:#ffffff;">My Reward Points</span></div>
+					<div class="dashboard-stat-icon"><i class="im im-icon-Dollar"></i></div>
+				</div></a>
+			</div>
+		</div>
+
+
+	<!-- MemberCard -->
+				<div class="row">	{% if page.membership_info %}
+			<div class="boxed-widget margin-top-35 margin-bottom-35">
+				<div class="hosted-by-title">
+					<h4><a href="#">{{session.first_name}} {{session.last_name}}</a><span>Premium Member</span> </h4>
+					<a href="{{base_url()}}/profile" class="hosted-by-avatar"><img src="{{base_url()}}/images/avatar.jpg" alt=""></a>
+				</div>
+				<ul class="listing-details-sidebar">
+					<li><i class="sl sl-icon-present"></i> {{page.reward_points}} Reward Points</li>
+					<li><i class="sl sl-icon-like"></i> Expiring {{page.membership_info.date_expiring}}</li>
+					<li><i class="sl sl-icon-badge"></i> {{page.membership_info.plan_name}} Member</li>
+				</ul>
+
+				<!-- Reply to review popup -->
+				<div id="join-bazichik" class="zoom-anim-dialog mfp-hide" style="max-width: 100%;">
+					<div class="small-dialog-header">
+						<h3>New to BaziChic?</h3>
+					</div>
+					<div class="message-reply margin-top-0">
+						{% include 'forms/register_form.twig' %}
+					</div>
+				</div>
+
+			</div>
+			 {% endif %}	</div>	
+			<!-- MemberCard / End-->
+			
+		<div class="row">
+			<!-- ########## Recent Activity #############-->
+			{% if page.recent_activities|length > 0 %}
+			<div class="col-lg-6 col-md-12">
+				<div class="dashboard-list-box with-icons margin-top-20">
+					<h4>Recent Activities</h4>
+					<ul>
+					    {% for activity in page.recent_activities %}
+						<li>
+							<i class="list-box-icon sl sl-icon-clock"></i> <strong>{{activity.message}}</strong>
+							<a href="{{activity.action_link}}" class="close-list-item"><i class="fa fa-close"></i></a>
+						</li>
+			
+						{% endfor %}
+					</ul>
+						<a href="{{base_url()}}/timeline" class="button" style="margin-top:12px;margin-bottom:12px;margin-right:8px;float:right;"><i class="fa fa-arrow-right"></i> View All Activities</a>
+				</div>
+			</div>
+			{% endif %}
+			<!-- ########## Recent Activity #############-->
+			
+			
+				<!-- ########## Recent Activity #############-->
+			{% if page.dash_notis|length > 0 %}
+			<div class="col-lg-6 col-md-12">
+				<div class="dashboard-list-box with-icons margin-top-20">
+					<h4>My Notifications</h4>
+					<ul>
+					    {% for notification in page.dash_notis %}
+						<li>
+							<i class="list-box-icon sl sl-icon-bell"></i> <strong>{{notification.message}}</strong>
+							<a href="{{notification.action_link}}" class="close-list-item"><i class="fa fa-close"></i></a>
+						</li>
+			
+						{% endfor %}
+					</ul>
+					<a href="{{base_url()}}/notifications" class="button" style="margin-top:12px;margin-bottom:12px;margin-right:8px;float:right;"><i class="fa fa-arrow-right"></i> View All Notifications</a>
+				</div>
+			</div>
+			{% endif %}
+			<!-- ########## Recent Activity #############-->
+			
+			
+			<!-- ########## Document Saves #############-->
+			{% if page.saved_docs %}
+			<div class="col-lg-12 col-md-12">
+				<div class="dashboard-list-box invoices with-icons margin-top-20">
+					<h4>Recently Reading</h4>
+					<ul>
+						{% for row in page.saved_docs %}
+						<li><i class="list-box-icon im im-icon-Arrow-LeftinCircle"></i>
+							<strong>{{row.title}}</strong>
+							<ul>
+								<li class="unpaid">Started {{row.date_created}}</li>
+								<li>{{row.read_status}}</li>
+								{% if document.date_updated %}	<li>Last Read: {{row.date_updated}}</li>{% endif %}
+								{% if document.qcode %}	<li><a href="{{base_url()}}/book-detail/{{document.qcode}}"> View Detail</a></li>{% endif %}
+							</ul>
+							<div class="buttons-to-right">
+							    
+				<form action="{{base_url()}}/ebook-reader" name="launchReaderForm" id="launchReaderForm" method="POST" style="margin-top:10px;margin-bottom:10px;">
+			    <input type="hidden" name="doc_id" value="{{row.id}}">
+			    <input type="hidden" name="doc_link" value="{{row.link}}">
+			    <input type="hidden" name="is_downloadable" value="{{row.is_downloadable}}">
+			    <input type="hidden" name="last_read_page" value="{{row.page}}">
+			    <button type="submit" class="button"> <i class="fa fa-arrow-right"></i> {{row.access_verb}} NOW</button>
+			    </form>
+				
+				 <input type="hidden" name="userRole" value="{{paeg.thisUser.type}}">
+				 
+							</div>
+						</li>
+						 {% endfor %} 
+						
+					</ul>
+				</div>
+			</div>
+{% endif %}
+			<!-- ########## Document Saves #############-->
+
+		</div>		
+{% endblock content %}
+
+{% block jsfooter %}
+<link rel="stylesheet" href="{{ base_url() }}/scripts/shepherd.js/dist/css/shepherd.css"/>
+<script src="{{ base_url() }}/scripts/shepherd.js/dist/js/shepherd.js"></script>
+<script src="{{ base_url() }}/scripts/tour.js"></script>
+<script type="text/javascript">
+function showAffiliateTour(first_name){
+    //alert("showAffiliateTour");
+    //const first_name = 'Hello ';
+    const tour = new Shepherd.Tour({
+  defaultStepOptions: {
+    cancelIcon: {
+      enabled: true
+    },
+    classes: 'class-1 class-2',
+    scrollTo: { behavior: 'smooth', block: 'center' }
+  }
+});
+
+tour.addStep({
+  title: 'LET US START',
+  text: 'Hi '+first_name+'! First generate your referral code that you can share with anyone. You can optionally generate multiple referral codes to track your conversions based on an audience or event.',
+  attachTo: {
+    element: '.firstTour',
+    on: 'bottom'
+  },
+  buttons: [
+    {
+      action() {
+        return this.next();
+      },
+      text: 'Next'
+    }
+  ],
+  id: 'creating'
+});
+
+tour.addStep({
+  title: 'MAKE CONNECTIONS',
+  text: 'Earn affiliate benefits when your connections grow. Update your paypal account email in profile page to redeem your earnings.',
+  attachTo: {
+    element: '.secondTour',
+    on: 'bottom'
+  },
+  buttons: [
+    {
+      action() {
+        return this.back();
+      },
+      classes: 'shepherd-button-secondary',
+      text: 'Back'
+    },
+    {
+      action() {
+        return this.complete();
+      },
+      text: 'Finish'
+    }
+  ],
+  id: 'creating2'
+});
+
+
+tour.start();
+console.log('tour started'); 
+}
+
+
+$(document).ready(function(){
+
+console.log('document is ready');  
+var thisUserType = '{{page.thisUser.type}}';
+var first_name = '{{page.thisUser.first_name}}';
+console.log(first_name+' ! document is ready with '+thisUserType);
+
+$("#startTourBtn").click(function() {
+  //alert(this.id);
+  //showAffiliateTour(first_name);
+  if(thisUserType == 'Åffiliate'){
+   showAffiliateTour(first_name); 
+}else{
+    showCustomerTour(first_name); 
+}
+});
+
+});
+</script>
+{% endblock jsfooter %}

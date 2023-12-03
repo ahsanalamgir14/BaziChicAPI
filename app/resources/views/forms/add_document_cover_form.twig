@@ -1,0 +1,128 @@
+<!-- Section -->
+{% if page.editMode %}
+	{% if page.warning %}
+		<div class="row">
+			<div class="col-md-12">
+				<div class="notification success" style="padding: 15px 26px 1px 26px;">
+					<h5><strong><i class="fa fa-bell"></i> ALERT </strong></h5>
+					<p><strong>{{page.warning}}  </strong></p>
+					<a class="close" href="#"></a>
+				</div>
+			</div>
+		</div>{% endif %}
+		
+<div class="row with-forms margin-bottom-20">
+<!-- One -->
+<div class="col-md-6">
+    <!-- Form Half Section / Starts -->			
+					<div class="add-listing-section margin-top-10">
+						<!-- Headline -->
+						<div class="add-listing-headline">
+							<h3><i class="sl sl-icon-paper-clip"></i> {{page.doc_type}} Cover</h3>
+						</div>
+						<!-- Dropzone -->
+						<div class="submit-section">
+						    	<!-- Overlay Section -->
+	  <div id="doc_cover_overlay" style="display:none;">
+						<div style="padding:60px;text-align: center;">
+					<img src="{{base_url()}}/images/preloader.gif" width="70"/>
+					<h3 style="color:#121212;margin-top:30px;"><strong>Updating {{page.doc_type}} Cover</strong></h3>
+					<h4 style="color:#232323;">Please wait...</h4>
+					</div></div>
+					<!-- end overlay -->
+						    <form id="docMediaUploadForm" name="docMediaUploadForm" action="{{base_url()}}/documents_media/upload" class="form-horizontal" enctype="multipart/form-data" method="POST" style="display:block;">
+    <input type="hidden" value="{{page.document.qcode}}" name="doc_id" id="doc_id">
+							<!-- Row -->
+							<div class="row with-forms">
+								<div class="col-md-12">
+								    <h5>Upload a cover image for this {{page.doc_type}}.</h5><hr>
+								    <div class="edit-profile-photo">
+	{% if document.cover %}					
+	<img id="cover_image_preview" src="{{base_url()}}/uploads/images/docs/{{document.cover}}" style="width:auto;height:300px;">
+	{% else %}
+	<img id="cover_image_preview" src="{{base_url()}}/images/books/default.png">
+    {% endif %}
+							<div class="change-photo-btn">
+								<div class="photoUpload">
+								    <span><i class="fa fa-upload"></i> Upload a Cover</span>
+								    <input type="file" id="cover_image" name="cover_image" class="upload" onchange="docImgPreview();"/>
+								</div>
+							</div>
+						</div>
+									
+								</div>
+							
+							</div>
+							<!-- Row / End -->
+							
+</form>
+
+						</div>
+					</div>
+					<!-- Form Half Section / End -->
+</div>
+<!-- Two -->
+<div class="col-md-6">
+    <!-- Form Half Section / Starts -->			
+					<div class="add-listing-section margin-top-10">
+						<!-- Headline -->
+						<div class="add-listing-headline">
+							<h3><i class="sl sl-icon-paper-clip"></i> {{page.doc_type}} File</h3>
+						</div>
+						<!-- Dropzone -->
+						<div class="submit-section">
+						    	<!-- Overlay Section -->
+	  <div id="doc_file_overlay" style="display:none;">
+						<div style="padding:60px;text-align: center;">
+					<img src="{{base_url()}}/images/preloader.gif" width="70"/>
+					<h3 style="color:#121212;margin-top:30px;"><strong>Uploading {{page.doc_type}} File</strong></h3>
+					<h4 style="color:#232323;">Please wait...</h4>
+					<hr>
+						<div id="myProgress" style="display:none;margin-top:18px;text-align:center;">
+  <div id="myBar" style="color:#ffffff;">
+      <p id="myBarTxt" style="text-align:center;margin:0 auto;"></p>
+  </div>
+</div>
+					</div></div>
+					<!-- end overlay -->
+						    <form id="docFileUploadForm" name="docFileUploadForm" action="{{base_url()}}/document_files/upload" class="form-horizontal" enctype="multipart/form-data" method="POST" style="display:block;">
+    <input type="hidden" value="{{page.document.qcode}}" name="doc_id" id="doc_id">
+							<!-- Row -->
+							<div class="row with-forms">
+								<div class="col-md-12">
+									<h5>Upload a file for this {{page.doc_type}}.</h5><hr>
+									<div class="row">
+  <!--------- FILE UPLOAD ---------->
+   <div class="edit-profile-photo">
+		<div style="clear:both">
+		    {% if document.link %}
+           <iframe id="viewer" frameborder="0" scrolling="no" width="300" height="300" {% if document.link %}	src="{{base_url()}}/uploads/documents/{{document.link}}" {% endif %}></iframe>
+           	{% else %}
+	<img id="imgviewer" src="{{base_url()}}/images/books/default.png">
+    {% endif %}
+        </div>
+							<div class="change-photo-btn">
+								<div class="photoUpload">
+								    <span><i class="fa fa-upload"></i> Upload {{page.doc_type}} File</span>
+								    {% if page.doc_type_id ==1 or page.doc_type_id ==3 %} 	
+	<input type="file" name="doc_link" id="doc_link" class="upload" accept="application/pdf" onchange="showPdfPreview();"/>
+	{% else %}
+   <input type="file" name="doc_link" id="doc_link" class="upload" accept="audio/*" onchange="showPdfPreview();"/>
+    {% endif %}
+								</div>
+							</div>
+						</div>
+  <!--------- END OF FILE UPLOAD ---------->
+						
+						
+						</div>
+								</div>
+							</div>
+							<!-- Row / End -->
+</form>
+
+						</div>
+					</div>
+					<!-- Form Half Section / End -->
+</div></div>
+{% endif %}

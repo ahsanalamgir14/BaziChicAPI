@@ -1,0 +1,90 @@
+{% extends 'layout.twig' %}
+{% block slider %} 
+<div id="titlebar">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Testimonials</h2>
+				<nav id="breadcrumbs">
+					<ul>
+						<li><a href="{{base_url()}}">Home</a></li>
+						<li><a href="{{base_url()}}/testimonials">Testimonials</a></li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block content %}
+<section class="fullwidth margin-top-20 padding-top-20 padding-bottom-70" data-background-color="#fff">
+	<!-- Info Section -->
+	<div class="container">
+
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<h3 class="headline centered">
+					What Readers Say
+					<span class="margin-top-25">We collect reviews from our users so you can get an honest opinion of what an experience with our reads are really like!</span>
+				</h3>
+			</div>
+		</div>
+
+	</div>
+	<!-- Info Section / End -->
+
+	<!-- Categories Carousel -->
+	<div class="fullwidth-carousel-container margin-top-20">
+		<div class="testimonial-carousel testimonials">
+
+{% for row in page.testimonials %}
+	<!-- Item -->
+			<div class="fw-carousel-review">
+				<div class="testimonial-box">
+					<div class="testimonial">{{row.review}}</div>
+				</div>
+				<div class="testimonial-author">
+					<img src="images/happy-client-01.jpg" alt="">
+					<h4>{{row.name}} <span>{{row.company}}</span></h4>
+				</div>
+			</div>
+			
+			<!-- Item -->
+	 {% endfor %} 
+		</div>
+	</div>
+</section>
+
+
+<!-- Parallax -->
+<div class="parallax"
+	data-background="{{base_url()}}/images/banner3.jpg"
+	data-color="#36383e"
+	data-color-opacity="0.6"
+	data-img-width="800"
+	data-img-height="505">
+
+	<!-- Infobox -->
+	<div class="text-content white-font">
+		<div class="container">
+
+			<div class="row">
+				<div class="col-lg-6 col-sm-8">
+					<h2>Read E-Books, Favourite, Review & Share</h2>
+					<p>Refer BaziChik to your friends who love reading and earn reward points. Read & Share Anything. Anywhere.</p>
+					<a href="{{base_url()}}/register" class="button margin-top-25">Get Started</a>
+				</div>
+				<div class="col-lg-6 col-sm-4 pull-right">
+					<img src="{{base_url()}}/images/rewardpoints.png" alt="Read E-Books, Favourite, Review & Share on BaziChik">
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- Infobox / End -->
+
+</div>
+<!-- Parallax / End -->
+{% endblock %}

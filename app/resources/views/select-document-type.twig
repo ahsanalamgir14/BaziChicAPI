@@ -1,0 +1,79 @@
+{% extends 'layout.twig' %}
+{% block slider %} 
+<div id="titlebar">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Create New Document</h2>
+				<!-- Breadcrumbs -->
+				<nav id="breadcrumbs">
+					<ul>
+						<li><a href="{{ base_url() }}">Home</a></li>
+						<li><a href="{{ base_url() }}/dashboard">Dashboard</a></li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block content %}
+<!-- Container / Start -->
+<div class="container">
+
+	<!-- Row / Start -->
+	<div class="row" style="margin-bottom:30px;">
+
+		<div class="col-md-12">
+			<div class="pricing-container margin-top-30">
+
+			<!-- Plan #1 -->
+
+				<div class="plan">
+
+					<div class="plan-price">
+						<h1><i class="sl sl-icon-book-open"></i></h1>
+						<span class="value" style="font-size: 30px;padding:0 0;">E-Book</span>
+					</div>
+
+					<div class="plan-features">
+						
+						<a class="button border" href="{{ base_url() }}/add-document/ebook">Create E-Book</a>
+					</div>
+
+				</div>
+
+				<!----
+				<div class="plan" style="margin-left:20px;">
+					<div class="plan-price">
+						<h1><i class="sl sl-icon-earphones-alt"></i></h1>
+						<span class="value" style="font-size: 30px;padding:0 0;">Audio Book</span>
+					</div>
+					<div class="plan-features">
+						<a class="button border" href="{{ base_url() }}/add-document/audiobook">Create Audio Book</a>
+					</div>
+				</div>
+				--->
+
+				<div class="plan" style="margin-left:20px;">
+					<div class="plan-price">
+						<h1><i class="sl sl-icon-layers"></i></h1>
+						<span class="value" style="font-size: 30px;padding:0 0;">Magazine</span>
+					</div>
+
+					<div class="plan-features">
+						
+						<a class="button border" href="{{ base_url() }}/add-document/magazine">Create Magazine</a>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- Row / End -->
+
+</div>
+<!-- Container / End -->
+{% endblock %}

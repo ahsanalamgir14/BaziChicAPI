@@ -1,0 +1,15 @@
+<form role="form" name="profileCredForm" id="profileCredForm" action="{{base_url()}}/users/creds/update">
+						<!-- Change Password -->
+						<div class="my-profile">
+							<label class="margin-top-0">Current Password</label>
+							<input type="password" name="old_password" required>
+
+							<label>New Password</label>
+							<input type="password" name="pass1" required>
+
+							<label>Confirm New Password</label>
+							<input type="password" name="pass2" required>
+                            <input type="hidden" value="{{session.userID}}" name="member_id" id="member_id">
+							<button type="submit" class="button margin-top-15">Change Password</button>
+						</div>
+ </form>

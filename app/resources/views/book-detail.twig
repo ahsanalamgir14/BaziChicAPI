@@ -1,0 +1,211 @@
+{% extends 'layout.twig' %}
+{% block jstriggers %}
+<link href="{{ base_url() }}/scripts/audioplayer/dist/skin/blue.monday/css/jplayer.blue.monday.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{{ base_url() }}/scripts/audioplayer/lib/jquery.min.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/scripts/audioplayer/dist/jplayer/jquery.jplayer.min.js"></script>
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function(){
+	$("#jquery_jplayer_1").jPlayer({
+		ready: function (event) {
+			$(this).jPlayer("setMedia", {
+				title: "Click to listen audio book",
+				m4a: "{{ base_url() }}/uploads/documents/{{document.link}}",
+				oga: ""
+			});
+		},
+		swfPath: "{{ base_url() }}/scripts/audioplayer/dist/jplayer",
+		supplied: "m4a, oga",
+		wmode: "window",
+		useStateClassSkin: true,
+		autoBlur: false,
+		smoothPlayBar: true,
+		keyEnabled: true,
+		remainingDuration: true,
+		toggleDuration: true
+	});
+	
+  
+ 
+ $('#rating').on('change', function() {
+        //alert("yeah!! "+this.value);
+        let msg = "Please select a rating.";
+        switch(this.value){
+            case 1:
+                 msg = "POOR";
+                 break;
+                 
+               case 2:
+                 msg = "AVERAGE";
+                 break;
+                 
+                case 3:
+                 msg = "GOOD";
+                 break;
+                 
+                case 4:
+                 msg = "VERY GOOD";
+                 break;
+                 
+                case 5:
+                 msg = "EXCELLENT";
+                 break;
+                 
+                 default:
+                 msg = " : N/A";
+                 break;
+        }
+         $('#ratingMsg').text("You selected "+this.value+"/5.");
+});
+
+  
+});
+//]]>
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	<div class="row sticky-wrapper">
+		<div class="col-lg-4 col-md-4 margin-top-20 sticky">
+			{% include 'partials/widgets/ebookrow.twig' %}
+			<!-- Verified Badge -->
+			{% if session.userID %}
+			<form action="{{base_url()}}/ebook-reader" name="launchReaderForm" id="launchReaderForm" method="POST" style="margin-top:10px;margin-bottom:10px;">
+			    <input type="hidden" name="doc_id" value="{{document.id}}">
+			    <input type="hidden" name="doc_link" value="{{document.link}}">
+			    <input type="hidden" name="is_downloadable" value="{{document.is_downloadable}}">
+			    <input type="hidden" name="last_read_page" value="2">
+			    <button type="submit" class="button" style="width:100%;"> <i class="fa fa-arrow-right"></i> {{page.unlock_title}}</button>
+			    </form>
+	{% else %}	    
+	<a href="#sign-in-dialog" class="button book-now fullwidth margin-top-5 popup-with-zoom-anim" class="button book-now fullwidth margin-top-5"><i class="fa fa-arrow-right"></i> {{page.unlock_title}}</a>				
+		{% endif %}
+		
+{% if session.userID == document.user_id %}
+<a href="{{base_url()}}/edit-document/{{document.qcode}}"><button class="button" style="width:100%;margin-bottom:10px;"><i class="fa fa-edit"></i>  Edit {{document.doc_type}}</button></a> 
+{% endif %}
+				
+{% if session.userID %}
+{% if document.is_saved %}			
+<a href="{{base_url()}}/saved-reads"><button class="button" style="width:100%;margin-bottom:10px;"><i class="fa fa-save"></i>  Saved to library</button></a> 
+{% else %}
+	<form action="{{base_url()}}/documents/save" name="saveDocForm" method="POST" class="saveDocForm" style="margin-bottom:10px;">
+			    <input type="hidden" name="doc_id" value="{{document.id}}">
+			    <input type="hidden" name="user_id" value="{{session.userID}}">
+			    <input type="hidden" name="page" value="0">
+			    <input type="hidden" name="progress" value="0">
+			    <button type="submit" class="button" style="width:100%;max-width:400px;text-align:center;"> <i class="fa fa-plus"></i> SAVE TO LIBRARY</button>
+			    </form>
+{% endif %}
+			    	{% else %}	    
+	<a href="#sign-in-dialog" class="button book-now fullwidth margin-top-5 popup-with-zoom-anim" class="button book-now fullwidth margin-top-5"><i class="fa fa-save"></i> SAVE TO LIBRARY</a>				
+		{% endif %}
+        
+	    <!-- Share / Like -->
+<div class="listing-share margin-top-40 margin-bottom-40 no-border">
+ {% if session.userID %}
+{% if document.is_liked > 0 %}						
+	<button class="like-button favouriteDocument" data-id="{{document.id}}" data-title="Liked"><i class="fa fa-heart"></i> You liked it!</button> 
+{% else %}
+	<button class="like-button favouriteDocument" data-id="{{document.id}}" data-title="Unliked"><i class="fa fa-heart-o"></i> Loved this {{document.doc_type}}?</button> 	
+{% endif %}
+{% else %}
+	<a href="#sign-in-dialog"><button class="button popup-with-zoom-anim orange"><i class="fa fa-heart"></i>  Sign up to favourite</button></a> 
+{% endif %}	
+<span>{{document.num_likes}} people liked this {{document.doc_type}}.</span>
+
+<!-- Share Buttons --><div class="sharethis-inline-share-buttons"></div><div class="clearfix"></div></div>
+		
+			<!-- MemberCard -->
+				{% if page.is_membership_active %}
+			<div class="boxed-widget margin-top-35 margin-bottom-35">
+				<div class="hosted-by-title">
+					<h4><a href="#">{{session.first_name}} {{session.last_name}}</a><span> <i class="sl sl-icon-badge"></i> {{page.active_plan.title}}</span> </h4>
+					{% if page.active_plan.user_image %}
+						<a href="{{base_url()}}/profile" class="hosted-by-avatar"><img src="{{base_url()}}/{{page.active_plan.user_image}}" alt=""></a>
+					{% else %}
+						<a href="{{base_url()}}/profile" class="hosted-by-avatar"><img src="{{base_url()}}/images/avatar.jpg" alt=""></a>
+					{% endif %}
+				</div>
+				<ul class="listing-details-sidebar">
+				    <p>{{page.membership_info}}</p>
+				</ul>
+
+				<!-- Reply to review popup -->
+				<div id="join-bazichik" class="zoom-anim-dialog mfp-hide" style="max-width: 100%;">
+					<div class="small-dialog-header">
+						<h3>New to BaziChik?</h3>
+					</div>
+					<div class="message-reply margin-top-0">
+						{% include 'forms/register_form.twig' %}
+					</div>
+				</div>
+
+			</div>
+			 {% else %}	
+			 	<div class="boxed-widget booking-widget margin-top-35 text-center">
+			<h2><i class="fa fa-trophy "></i> </h2>
+				<h3>START YOUR 10 DAYS FREE TRIAL</h3>
+				<p>Exclusive 10 days trial to our library. Subscribe and access thousands of E-Books, Audio Books and Magazines brought to you by Bazichik.</p>
+				<div class="row with-forms  margin-top-0"></div>
+				<a href="{{base_url()}}/subscription-plans" class="button book-now fullwidth margin-top-5"><i class="fa fa-arrow-right"></i> Get Started</a>
+				{% if session.userID %} 
+				 {% else %}
+				 	<a href="#sign-in-dialog" class="button book-now fullwidth margin-top-5 popup-with-zoom-anim" class="button book-now fullwidth margin-top-5"><i class="fa fa-users"></i> Join Bazichik</a>
+			    {% endif %}	
+			
+			</div>
+			 {% endif %}	
+			<!-- MemberCard / End-->
+
+		</div>
+		<!-- Sidebar / End -->
+		
+		
+		
+		
+		<div class="col-lg-8 col-md-8 padding-right-10">
+
+			<!-- Titlebar -->
+			<div id="titlebar" class="listing-titlebar">
+				<div class="listing-titlebar-title">
+					<h2 style="color:#333;">{{document.title}} {% if document.tag %} 
+<span class="listing-tag">{{document.tag}}</span>{% endif %}</h2>
+					<span>
+						<a href="#listing-location" class="listing-address">
+							<i class="fa fa-tags"></i>
+							{{document.category}}
+						</a>
+					</span>
+					
+					{% if document.keywords|length > 0 %}
+					<p><span>
+					{% for keyword in document.keywords %}
+	                <a href="#" style="padding: 0px 10px;" class="rate-review"><i class="sl sl-icon-tag"></i> {{keyword.keyword}}</a>
+                    {% endfor %}
+					</span></p>{% endif %}
+					
+					{% if document.num_reviews > 0 %}
+					<div class="star-rating" data-rating="{{document.avg_rating}}">
+						<div class="rating-counter"><a href="#listing-reviews">({{document.num_reviews}} reviews)</a></div>
+					</div>{% endif %}
+					
+				</div>
+			
+			</div>
+	<div class="sharethis-inline-share-buttons" style="display:block;margin-bottom:16px;"></div>
+	
+
+{% include 'partials/widgets/audiobookplayer.twig' %}
+
+{% include 'partials/widgets/book_detail_tab.twig' %}
+					
+</div>
+
+
+
+
+	</div>
+</div>
+{% endblock %}

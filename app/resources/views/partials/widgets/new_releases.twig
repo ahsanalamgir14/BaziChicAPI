@@ -1,0 +1,11 @@
+<div class="simple-slick-carousel dots-nav" style="padding-left:30px;padding-right:30px;">
+{% if page.latest_docs|length > 0 %}
+{% for document in page.latest_docs %}
+	<!-- Listing Item -->
+				<div class="carousel-item">
+			{% include 'partials/widgets/ebookrow.twig' %}
+				</div>
+				<!-- Listing Item / End -->
+{% endfor %}
+{% endif %}
+</div>

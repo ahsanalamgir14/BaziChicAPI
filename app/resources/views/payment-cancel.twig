@@ -1,0 +1,22 @@
+{% extends 'layout.twig' %}
+{% block slider %} 
+{% endblock %}
+{% block content %}
+<!-- Container -->
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="booking-confirmation-page">
+				<img src="{{base_url()}}/images/failure.png" style="width:80px;height:80px;">
+				<h2 class="margin-top-10">Payment Cancelled</h2>
+				<p>Looks like you have cancelled this transaction.</p>
+				<p>{{page.display_message}}</p>
+				<a href="{{ base_url() }}" class="button margin-top-30">Back</a>
+			</div>
+
+		</div>
+	</div>
+</div>
+<!-- Container / End -->
+{% endblock %}

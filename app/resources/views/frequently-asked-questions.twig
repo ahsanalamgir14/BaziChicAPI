@@ -1,0 +1,72 @@
+{% extends 'layout.twig' %}
+{% block content %}
+<div id="titlebar" style="background-color:#34A853;">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2 style="color:#ffffff;font-weight:500;">Frequently Asked Questions</h2>
+				<nav id="breadcrumbs">
+					<ul>
+						<li><a style="color:#ffffff;font-weight:500;" href="index.html">Home</a></li>
+						<li><a style="color:#ffffff;font-weight:500;"href="{{base_url()}}/frequently-asked-questions">FAQs</a></li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Container / Start -->
+<div class="container" style="background-color:#fff;">
+<div class="row" style="text-align:center;display:block;margin:0 auto;">
+    <div class="col-md-1"></div>
+		<div class="col-md-10 offset-md-2">
+		    <form name="filterFAQForm" action="{{base_url()}}/list-faqs" class="form-horizontal" method="GET" style="display:block;">
+			<div class="main-search-input" style="margin-top: 5px;box-shadow: 0 0 8px 0 rgba(51, 4, 4, 0.4);width:100%;">
+						<div class="main-search-input-item">
+							<input type="text" name="search_item" placeholder="What are you looking for?" value=""/>
+						</div>
+						<button class="button" type="submit">Search</button>
+					</div>
+					</form>
+		</div>
+		<div class="col-md-1"></div>
+	</div>
+	
+
+<!------ View Style 2----->
+<div class="row" style="margin-top:14px;margin-bottom:40px;display:block;">
+	{% for row in page.categories %}
+	{% if loop.index %3 == 0 %}
+	<div class="clearfix"></div>
+	<div class="row">
+	{% endif %}
+	<div class="col-lg-6 col-md-12">	
+	<div class="boxed-widget opening-hours margin-top-20">
+				<h3 style="color: #444444;font-weight:bold;"><i class="sl sl-icon-pin"></i> {{row.title}}</h3>
+				<ul>
+				    {% for rowdata in row.subcategories %}
+					<li>
+					<a style="color: #444444;font-size: 16px;" href="{{base_url()}}/list-faqs?category={{rowdata.qcode}}" class="read-more"> <i class="fa fa-angle-right"></i> {{rowdata.title}} </a>
+					</li>
+	 {% endfor %}
+				</ul>
+			</div></div>
+			
+			{% if loop.index %3 == 2 %}
+	</div><div class="clearfix"></div>
+	{% endif %}
+	
+{% endfor %}
+</div>
+<!------ End of View Style 2----->
+
+
+
+			    
+			    
+
+</div>
+<!-- Container / End -->
+{% endblock content %}

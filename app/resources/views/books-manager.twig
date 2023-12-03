@@ -1,0 +1,43 @@
+{% extends 'admin_layout.twig' %}
+{% block jstriggers %}
+<link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+<script type="text/javascript" src=" https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript">
+ $(document).ready(function() {
+$('#example').DataTable();
+});
+</script>
+<style>
+.table > tbody > tr > td{
+        font-size:14px;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+{% if page.data|length > 0 %}
+    {% include 'list_items/documents_data_table.twig' %}  
+            {% else %}
+			 <section style="margin: 40px 0 80px 0;text-align: center;" class="center">
+				<h2 style="text-align: center;
+    font-size: 100px;
+    line-height: 110px;
+    font-weight: 500;"><i class="sl sl-icon-layers"></i></h2>
+				<h4>You have not added any document yet.</h4>
+
+				<!-- Search -->
+				<div class="row">
+					<div class="col-lg-8 col-lg-offset-2">
+						<a href="{{base_url()}}/select-document-type" class="button">Create New Document</a>
+					</div>
+				</div>
+				<!-- Search Section / End -->
+
+
+			</section>
+            {% endif %}
+			</div>		
+{% endblock %}

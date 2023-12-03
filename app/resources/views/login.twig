@@ -1,0 +1,79 @@
+{% extends 'layout.twig' %}
+{% block slider %} 
+{% endblock %}
+{% block content %}
+	<div class="container">
+		<div class="row margin-top-10">
+	
+			<div class="col-lg-8">
+				<div class="boxed-widget" style="padding:30px;z-index: 50;
+    box-sizing: border-box;border-radius: 4px;margin:15px;">
+	
+ <div id="login_page_overlay" style="display:none;">
+					<div style="margin: 60px; text-align: center;">
+					<img src="{{base_url()}}/images/preloader.gif" width="50"/>
+					<h4><strong>Authenticating...</strong></h4>
+					<h5>Please wait...</h5>
+					<div id="login_page_msg"></div>
+					</div>	
+					</div>
+					
+ <form method="POST" action="{{base_url()}}/login_controller" class="login" name="loginPageForm" id="loginPageForm">
+     <div class="text-center">
+<h3 style="color:#333;">Member Login</h3>
+</div>
+<div class="text-center">
+					<p style="color:#333;font-weight:500;">Signin to access thousands of E-Books, Audio Books and Magazines brought to you by BaziChic.</p>
+				</div>
+								<p class="form-row form-row-wide">
+									<label for="email">Email:
+										<i class="im im-icon-Male"></i>
+										<input type="email" class="input-text" name="email" placeholder="Your registered email" required />
+									</label>
+								</p>
+
+								<p class="form-row form-row-wide">
+									<label for="password">Password:
+										<i class="im im-icon-Lock-2"></i>
+										<input class="input-text" type="password" name="password" placeholder="Your Password" required />
+									</label>
+									
+								</p>
+								
+									<div class="form-row text-left">
+								<a href="{{base_url()}}/password-recovery" class="" style="text-decoration:underline;font-weight:500;cursor: pointer;"><label>Recover Password</label></a>
+								</div>
+
+
+								<div class="form-row text-right">
+									<button type="submit" class="button margin-top-10"><i class="fa fa-unlock-alt"></i> Log In </a>
+								</div>
+								
+							</form>
+
+				</div>
+			</div>
+			<div class="col-lg-2"></div>
+			
+				<div class="col-lg-4">
+		<div class="boxed-widget" style="z-index: 50;
+    box-sizing: border-box;border-radius: 4px;margin:15px;">
+	<div class="text-center">
+<!-- Headline -->
+<div class="text-center">
+<h3 style="color:#333;">Create Account</h3>
+</div>			
+<div class="inner">
+<div class=""><img src="{{base_url()}}/images/avatar.jpg" style="width:60px;height:60px;border-radius: 50%;margin:10px;"></div>
+
+<span style="color:#333;">Are you a registered subscriber of BaziChic? Sign in using your credentials to access unlimited E-Books, Audio Books and Magazines.</span></div>
+<a href="{{base_url()}}/register" class="button fullwidth margin-top-25"><i class="fa fa-user"></i> Register New Account</a>
+	</div>					
+	</div>
+		</div>
+		
+		
+		</div>
+</div>
+
+{% endblock %}

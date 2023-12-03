@@ -1,0 +1,57 @@
+<table id="example" class="table table-striped table-bordered" style="width:100%;margin-bottom:30px;">
+        <thead>
+            <tr>
+              <th>Cover</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Likes</th>
+                <th>Saves</th>
+                <th>Reviews</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+             {% for document in page.data %}
+            <tr>
+                
+                <td>
+{% if document.cover %}					
+	<img src="{{base_url()}}/uploads/images/docs/{{document.cover}}" style="float:center;width:75px;height:auto;">
+	{% else %}
+	<img src="{{base_url()}}/images/books/default.png" style="float:center;width:60px;height:auto;">
+    {% endif %}</td>
+                <td><p style="margin-top:1px;margin-bottom:1px;padding-bottom: 10px;font-weight:bold;">{{document.title}}</p>
+                <p style="font-size:14px;margin-top:1px;margin-bottom:1px;padding-bottom: 1px;">File: {{document.file_type}} {% if document.note %} ({{document.note}} MB){% endif %}</p>
+                 {% if document.date_updated %}	<p style="font-size:14px;margin-top:1px;margin-bottom:1px;padding-bottom: 6px;">Last Updated: {{document.date_updated}} </p>{% endif %}
+                 {% if document.is_downloadable %}	<p style="font-size:14px;margin-top:1px;margin-bottom:1px;padding-bottom: 6px;">Downloadable {{document.is_downloadable}} </p>{% endif %}
+                 {% if document.is_published == 0 %}	<p style="font-size:14px;margin-top:1px;margin-bottom:1px;padding-bottom: 6px;">Status: Not Published </p>{% endif %}
+                </td>
+                <td>{{document.category}}</td>
+                <td>{{document.num_likes}}</td>
+                <td>{{document.num_saves}}</td>
+                <td>
+                    {% if document.num_reviews > 0 %}
+                    Rated {{document.avg_rating}}/{{document.num_reviews}} Reviews
+                    {% else %}Not rated yet{% endif %}	
+                    </td>
+                  <td>	
+                  	<a href="{{base_url()}}/book-detail/{{document.qcode}}" target="_blank" class="btn btn-dark btn-lg"><i class="sl sl-icon-share-alt"></i> View</a>
+                  	<a href="{{base_url()}}/edit-document/{{document.qcode}}" class="btn btn-dark btn-lg"><i class="sl sl-icon-note"></i> Edit</a>
+						<a href="#" class="btn btn-danger btn-lg deleteDocument" data-id="{{document.qcode}}"><i class="sl sl-icon-trash"></i> Del</a>
+								
+									</td>
+            </tr>
+           {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Cover</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Likes</th>
+                <th>Saves</th>
+                <th>Reviews</th>
+                <th>Action</th>
+            </tr>
+        </tfoot>
+    </table>

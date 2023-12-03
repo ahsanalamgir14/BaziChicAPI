@@ -1,0 +1,40 @@
+{% extends 'admin_layout.twig' %}
+{% block content %}
+<div class="row">
+<div class="col-md-12">    
+<div class="pricing-container margin-top-0">
+{% if page.membership_plans|length > 0 %}
+{% for row in page.membership_plans %}
+	<div class="plan {% if row.is_highlighted %}featured{% endif %}">
+	    {% if row.is_highlighted %}	<div class="listing-badge">
+						<span class="featured">Featured</span>
+					</div>{% endif %}
+					<div class="plan-price">
+						<h3>{{row.title}}</h3>
+						<span class="value">
+						{% if row.price <= 0 %}
+						FREE
+						{% else %}
+						${{row.price}} <span style="font-size: 17px;font-weight:600;">/ {{row.duration}} Days</span>
+						{% endif %}</span>
+						<span class="period">{{row.tagline}}</span>
+					</div>
+
+					<div class="plan-features">
+					    {{row.membersip_desc | raw}}
+						<a class="button border" href="{{base_url()}}/edit-membership-plan/{{row.qcode}}">Edit Details</a>
+					</div>
+				</div>
+	 {% endfor %} 
+	 {% else %}
+			 <section style="padding: 30px 30px 30px 30px;text-align: center;background-color:#ffffff; class="center margin-top-30 margin-bottom-30">
+				<h2 style="text-align: center;
+    font-size: 40px;
+    line-height: 50px;
+    font-weight: 500;color:#666;"><i class="sl sl-icon-badge"></i></h2>
+    <h3>No Membership Plan Yet!</h3>
+			<h4>You have not created any membership plan yet. </h4>
+			</section>
+            {% endif %}
+			</div></div></div>		
+{% endblock content %}

@@ -1,0 +1,153 @@
+<!-- Section -->
+{% if page.editMode %}
+{% set formName = 'updateDocumentForm' %}
+{% set formUrl = 'documents/update' %}
+{% set actionBtnLabel = 'SAVE CHANGES' %}
+{% else %}
+{% set formName = 'addDocumentForm' %}
+{% set formUrl = 'documents/upload' %}
+{% set actionBtnLabel = 'PROCEED' %}
+{% endif %}
+<form id="{{formName}}" name="{{formName}}" action="{{base_url()}}/{{formUrl}}" class="form-horizontal" enctype="multipart/form-data" method="POST" style="display:block;">
+<div class="row">
+			<div class="col-lg-12">
+
+				<div id="add-listing margin-top-20">
+				    <div class="add-listing-section">
+						<!-- Headline -->
+						<div class="add-listing-headline">
+						{% if page.editMode %}					
+						<h3><i class="sl sl-icon-doc"></i> Update {{page.doc_type}}</h3>
+						{% else %}	<h3><i class="sl sl-icon-doc"></i> Add New {{page.doc_type}}</h3> {% endif %}
+						
+						</div>
+					
+						<!-- Description -->
+						{% if page.editMode %}					
+                        <input type="hidden" value="{{page.doc_id}}" name="doc_id" id="doc_id"> {% endif %}
+						<input type="hidden" name="note" id="note" value="{{document.note}}">
+					
+						{% if page.editMode %}					
+							<input type="hidden" name="user_id" id="user_id" value="{{document.user_id}}">
+						{% else %}	<input type="hidden" name="user_id" id="user_id" value="{{session.userID}}"> {% endif %}
+						
+						{% if page.editMode %}					
+							<input type="hidden" name="document_type" id="document_type" value="{{document.document_type}}">
+						{% else %}		<input type="hidden" name="document_type" id="document_type" value="{{page.doc_type_id}}"> {% endif %}
+					
+						
+						
+					<input type="hidden" name="doc_type_name" value="{{page.doc_type}}" required="required" readonly/>
+						<input name="author_desc" id="author_desc" type="hidden" placeholder="e.g. http://bazichik.com" value="{{document.author_link}}" >
+									<input name="author_link" id="author_link" type="hidden" placeholder="e.g. http://bazichik.com" value="{{document.author_link}}" >
+				<input type="hidden" name="price" id="price" value="0">					
+									
+						<!-- Row -->
+						<div class="row with-forms">
+							<!-- One -->
+								<div class="col-md-6">
+									<h5>{{page.doc_type}} Title* <i class="tip" data-tip-content="Enter a tile for this {{page.doc_type}}"></i></h5>
+								<input name="title" id="title" class="search-field" type="text" required="required" value="{{document.title}}"/>
+								</div>
+							<!-- Two -->
+							<div class="col-md-6">
+								<h5>{{page.doc_type}} Category*</h5>
+								<select class="chosen-select-no-single" name="category_id" id="category_id" required="required">
+									
+			{% if document.category_id > 0 %} 
+								<option value="{{document.category_id}}">{{document.category}}</option>	
+			{% endif %}	
+			<option label="blank">Select a category</option>
+									
+	{% if page.list_categories %}
+            {% for comp_row in page.list_categories %}
+			<option value="{{comp_row.id}}">{{comp_row.title}}</option>
+			{% endfor %}
+            {% endif %}
+								</select>
+							</div></div>
+							
+<div class="row with-forms">
+							<!-- Title -->
+		
+							<div class="col-md-6">
+								<h5>Author Name</h5>
+								<input name="author_name" id="author_name" type="text" placeholder="e.g. Jed Meccena" value="{{document.author_name}}" >
+							</div>
+
+							<!-- Type -->
+							<div class="col-md-6">
+								<h5>Keywords <i class="tip" data-tip-content="You can enter a maximum of 5 keywords relevant to this document."></i></h5>
+								<input name="keyword" id="keyword" type="text" placeholder="Keywords should be separated by commas" value="{{document.keywords}}">
+							</div>
+						</div>	
+						
+						<div class="form">
+							<h5>{{page.doc_type}} Description*</h5>
+							<textarea class="WYSIWYG" name="description" cols="40" rows="2" id="description" spellcheck="true" placeholder="Write a brief and concise description about the document">{{document.description}}</textarea>
+						</div>
+
+						<!-- Row -->
+						<div class="row with-forms">
+
+	<div class="col-md-6 margin-top-10">
+								<h5>Store Tag <i class="tip" data-tip-content="Add a tag to this {{page.doc_type}} that users will see in the store."></i> </h5>
+								<select class="chosen-select-no-single" name="tag" id="tag">
+								    
+								{% if document.tag %} 
+								<option value="{{document.tag}}">{{document.tag}}</option>	
+		                	    {% endif %}	
+		    <option value="">-- Leave Blank --</option>            	    
+			{% if page.list_ribbon_tags %}
+            {% for tag_row in page.list_ribbon_tags %}
+			<option value="{{tag_row.title}}">{{tag_row.title}}</option>
+			{% endfor %}
+            {% endif %}
+								</select>
+							</div>
+						    
+{% if page.doc_type_id ==1 or page.doc_type_id ==3 %}
+<div class="col-md-6 margin-top-10">
+								<h5>Number of Pages <i class="tip" data-tip-content="Total number of pages in this {{page.doc_type}}."></i> </h5>
+								<input name="num_pages" id="num_pages" type="text" value="{{document.num_pages}}">
+								</div>
+							</div>
+{% else %}
+<input type="hidden" name="num_pages" id="num_pages" value="0">
+{% endif %}
+							
+
+<input type="hidden" name="read_time" id="read_time" value="0">
+<input type="hidden" name="listen_time" id="listen_time" value="0">
+
+	
+							<hr>
+								<div class="checkboxes in-row margin-bottom-20">
+							<input id="check-a" type="checkbox" name="is_downloadable" value="1" {% if document.is_downloadable %}checked{% endif %}>
+							<label for="check-a">Allow users to download this {{page.doc_type}}.</label>
+						</div>
+					
+						{% if page.editMode %}
+	<div class="checkboxes in-row margin-bottom-20 margin-top-10">
+							<input id="check-b" type="checkbox" name="is_published" value="1" {% if document.is_published > 0 %}checked{% endif %}>
+							<label for="check-b">Publish this document and make available to public.</label>
+						</div>	
+{% else %}
+<input id="check-b" type="hidden" name="is_published" value="0">
+{% endif %}
+                          
+						</div>
+						<!-- Row / End -->
+						
+
+					</div>
+					<!-- Section / End -->
+								<div class="form-row text-center">
+									<input type="submit" class="button fullwidth margin-top-20" value="{{actionBtnLabel}}" />
+								</div>	<!-- Section / End -->
+
+				</div>
+			</div>
+
+		</div>
+			</form>

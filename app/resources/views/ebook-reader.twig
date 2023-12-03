@@ -1,0 +1,125 @@
+{% extends 'layout_doc_viewer.twig' %}
+{% block jstrigger %}
+<script>
+    let hostname = $(location).attr('hostname');
+    //let fullHref = $(location).attr('href');
+     let hostnameRef = 'https://'+hostname+'';
+    //console.log("Bazichic Reader : URL ===> "+hostname + " : "+hostnameRef);
+   
+   let openPage = {{page.openPage}};
+</script>
+{% endblock %}
+{% block content %}
+
+{% if page.allowReading %}
+<div id="flipbookContainer"></div>
+<script>
+var currentPageSaved = 1;
+var numTotalPages = 0;
+var enableDownload = false;
+try {
+    enableDownload = '{{page.is_downloadable}}';
+    //console.log("enableDownload 1 : "+enableDownload);
+    if(enableDownload != '0'){
+        enableDownload = true;
+    }
+}catch(err) {
+    enableDownload = false;
+}
+//console.log("enableDownload 2 : "+enableDownload);
+    $(document).ready(function() {
+    //var pdf = 'https://www.bazichic.com/uploads/documents/{{page.doc_link}}';
+    var pdf = hostnameRef+'/uploads/documents/{{page.doc_link}}';
+ 
+   //alert("Sorry for inconvenience. We are testing a feature => "+enableDownload);
+    try {
+      PDFJS.getDocument(pdf).then(function(thisPdf){
+        numTotalPages = thisPdf.numPages;
+    });
+}
+catch(err) {
+ 
+}
+    
+    var options = {height: 500, duration: 800, enableDownload: enableDownload, openPage: openPage, onFlip: function (flipBook) {
+      // after flip event is fired
+      //console.log("Wow onFlip() => ");
+      currentPageSaved = $('#df_book_page_number').val();
+      //console.log("Wow onFlip() => "+currentPageSaved);
+      //console.log("Wow onFlip() => "+JSON.stringify(flipBook));
+    }, onReady: function (flipBook) {
+      //console.log("Wow onReady() => ");
+      //console.log("Wow onReady() => "+JSON.stringify(flipBook));
+    }};
+    let flipBook = $("#flipbookContainer").flipBook(pdf, options);
+
+    
+
+    $('#saveMyReadForm').submit(function (e) {
+    e.preventDefault();
+    let currentPage = $('#df_book_page_number').val();
+    let progress = 0;
+    if(numTotalPages > 0){
+        progress = (currentPage*100)/numTotalPages;
+        $('input#progress').val(progress);
+    }
+    $('input#page').val(currentPage);
+    document.getElementById('saveMyReadForm').style.display = 'none';
+	document.getElementById('saveMyReadLoader').style.display = 'inline-block';
+    	$.ajax({
+        url: $(this).attr('action'),
+        type: "POST",
+        data: $(this).serialize(),
+		dataType: 'json',
+        success: function(data) {
+    document.getElementById('saveMyReadForm').style.display = 'inline-block';
+	document.getElementById('saveMyReadLoader').style.display = 'none';
+		if(data.error){
+			swal({
+  title: '',
+  html: '<b>'+data.message+'</b>',
+  type: 'error',
+  showCancelButton: false,
+  confirmButtonColor: '#3085d6',
+  focusConfirm: false
+});
+}else{
+swal({
+  position: 'top-end',
+  type: 'success',
+  html: '<b>'+data.message+'</b>',
+  showConfirmButton: false,
+  timer: 1500
+})
+ //console.log("Current Page=> "+flipBook.pageCount);
+  //console.log("Total Page=> "+flipBook.pdfViewer.currentPageNumber);
+}
+ },
+        error: function (xhr, ajaxOptions, thrownError) {
+        //alert(xhr.status);
+        //alert(thrownError);
+      }
+    });
+    
+ });
+ 
+ 
+    });
+</script>
+{% else %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="booking-confirmation-page" style="text-align: center;padding: 40px 0;">
+				<img src="{{base_url()}}/images/failure.png" style="width:80px;height:80px;">
+				<h2 class="margin-top-10">ACCESS DENIED</h2>
+				<p>You are not authorized to access this content.</p>
+				<p>{{page.userMessage}}</p>
+				<a href="{{ base_url() }}/my-subscriptions" class="button margin-top-30"> Back to My Account</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+{% endblock %}
+

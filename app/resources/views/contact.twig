@@ -1,0 +1,156 @@
+{% block jstriggers %}
+<script src="https://www.google.com/recaptcha/api.js?render=6Le00N4UAAAAAMhCM9lfcEoGbxwyhfYzidO_Es0W" async defer></script>
+<script type="text/javascript">
+grecaptcha.ready(function() {
+    grecaptcha.execute('6Le00N4UAAAAAMhCM9lfcEoGbxwyhfYzidO_Es0W', {action: 'homepage'}).then(function(token) {
+       alert(token);
+       //recaptchaRes
+    });
+});
+//https://stackoverflow.com/questions/56741620/php-smtp-form-recaptcha4
+ $(document).ready(function() {
+$('#captcha_reload').on('click',function(e)
+	{
+	  e.preventDefault();
+	  d = new Date();
+	  alert(d);
+	  var src = $("img#captcha_image").attr("src");
+	  src = src.split(/[?#]/)[0];
+	  
+	  $("img#captcha_image").attr("src", src+'?'+d.getTime());
+	});
+ });	
+	
+</script>
+{% endblock %}
+{% extends 'layout.twig' %}
+{% block slider %} 
+<div class="contact-map margin-bottom-60">
+
+	<!-- Google Maps -->
+	<div id="singleListingMap-container">
+		
+	<div class="mapouter"><div class="gmap_canvas"><iframe width="100%" height="420" id="gmap_canvas" src="https://maps.google.com/maps?q=Kuala Lumpur, Malaysia&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe></div><a href="https://www.embedgooglemap.net">embedgooglemap.net</a><style>.mapouter{overflow:hidden;height:100%;width:100%;}.gmap_canvas {background:none!important;height:100%;width:100%;}</style></div>
+	</div>
+	<!-- Google Maps / End -->
+	<!-- Office -->
+	<div class="address-box-container">
+		<div class="address-container" data-background-image="{{base_url()}}/images/our-office.jpg">
+			<div class="office-address">
+				<h3>Our Office</h3>
+				<ul>
+				<li>BaziChic Chinese Metaphysics Consultany</li>
+					<li>Taman Sri Rampai, 53300</li>
+					<li>Kuala Lumpur, Malaysia</li>
+					<li style="margin-top:15px;font-weight:bold;">Call Us : 413-285-8989  </li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- Office / End -->
+
+</div>
+<div class="clearfix"></div>
+{% endblock %}
+{% block content %}
+<!-- Container / Start -->
+<div class="container">
+<div class="row">
+
+		<!-- Contact Details -->
+		<div class="col-md-5">
+			<h4 class="headline margin-bottom-30">Get In Touch</h4>
+			<!-- Contact Details -->
+			<div class="sidebar-textbox">
+				<p>Feel free to contact us if you have any inquiry about our services.</p>
+	
+				<ul class="contact-details">
+				{% if settings.phone %}
+				<li><i class="im im-icon-Phone-2"></i> <strong>Phone:</strong> <span> {{settings.phone}} </span></li>
+                {% endif %}
+				
+				{% if settings.email %}
+				<li><i class="im im-icon-Envelope"></i> <strong>E-Mail:</strong> <span><a href="#">{{settings.email}}</a></span></li>
+                {% endif %}
+				
+				{% if settings.link %}
+				<li><i class="im im-icon-Globe"></i> <strong>Web:</strong> <span><a href="#">{{settings.link}}</a></span></li>
+                {% endif %}
+				
+				</ul>
+			</div>
+
+		</div>
+
+		<!-- Contact Form -->
+		<div class="col-md-7">
+
+			<section id="contact">
+				<h4 class="headline margin-bottom-35">Contact Form</h4>
+
+				<div id="contact-message"></div> 
+
+					<form role="form" name="siteContactForm" id="siteContactForm" action="{{base_url()}}/contact/submit" autocomplete="off" method="POST">
+
+					<div class="row">
+						<div class="col-md-6">
+							<div>
+								<input name="name" type="text" id="name" placeholder="Your Name" required="required" />
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div>
+								<input name="email" type="email" id="email" placeholder="Email Address" pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$" required="required" />
+							</div>
+						</div>
+					</div>
+
+				
+					<div>
+									<select class="chosen-select-no-single" name="subject" required>
+										<option label="">Select a subject</option>	
+										<option value="I need technical help">I need technical help</option>
+										<option value="I need help on refunds">I need help on refunds</option>
+										<option value="I need help with payments">I need help with payments</option>
+										<option value="I have a suggestion">I have a suggestion</option>
+										<option value="Request for a Bazi and QMDJ consultation quotation">Request for a Bazi and QMDJ consultation quotation</option>
+										<option value="Request for a Feng Shui audit quotation">Request for a Feng Shui audit quotation</option>
+										<option value="Request for a Date Selection quotation">Request for a Date Selection quotation</option>
+										<option value="I have a suggestion">I have a suggestion</option>
+									</select>
+								</div>
+
+					<div>
+						<textarea name="comments" cols="40" rows="3" id="comments" minLength="30" placeholder="Message" spellcheck="true" required="required"></textarea>
+					</div>
+
+					
+					<!-- Google reCAPTCHA box 
+    <div class="g-recaptcha" id="rcaptcha" style="margin-left: 90px;" data-sitekey="6LfazN4UAAAAAHcW2a4LovKYvU-FhXAW7rmazyyy"></div>
+<span id="captcha" style="margin-left:100px;color:red" />
+-->
+
+ <div class="row" style="margin-bottom:30px;">
+                            <div class="col-sm-5">
+                                <img src="{{base_url()}}/images/capcha.jpg" id="captcha_image"/>
+                                <br/>
+                                
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="email">Enter the code from the image here:</label>
+                                <input type="text" class="form-control" required id="captcha" name="captcha" required>
+                            </div>
+                        </div>
+                        
+                        
+	<input type="submit" class="submit button" id="submit" value="Submit Message" />
+					</form>
+			</section>
+		</div>
+		<!-- Contact Form / End -->
+
+	</div>
+	</div>
+	<div id="footer" class="margin-top-55"></div>
+{% endblock %}

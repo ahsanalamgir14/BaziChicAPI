@@ -1,0 +1,88 @@
+{% extends 'layout.twig' %}
+{% block content %}
+<div id="titlebar">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Select Membership Plan</h2>
+				<nav id="breadcrumbs">
+					<ul>
+						<li><a href="index.html">Home</a></li>
+						<li><a href="{{base_url()}}/membership">Membership</a></li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Pricing Tables
+================================================== -->
+
+<!-- Container / Start -->
+<div class="container">
+<div class="row">
+		<div class="col-md-12">
+			<h3 class="headline centered margin-top-30">
+				Subscription Plans
+				 <span>10 Days Free Trial for All Plans.</span>
+			</h3>
+				<div class="notification success margin-bottom-30">
+					<h5><strong><i class="fa fa-bell"></i> NOTICE </strong></h5>
+					<p><strong>Online subscription will be activated from March 11, 2020. </strong></p>
+					<a class="close" href="#"></a>
+				</div>
+				
+				
+		</div>
+	</div>
+	
+	<!-- Row / Start -->
+	<div class="row">
+		<div class="col-md-12">
+			<div class="pricing-container margin-top-30">
+
+
+{% if page.membership_plans|length > 0 %}
+{% for row in page.membership_plans %}
+	<div class="plan {% if row.is_highlighted %}featured{% endif %}">
+	    {% if row.is_highlighted %}	<div class="listing-badge">
+						<span class="featured">Featured</span>
+					</div>{% endif %}
+					
+					
+					<div class="plan-price">
+						<h3 style="font-weight:bold;">{{row.title}}</h3>
+					
+						{% if row.price <= 0 %}
+						{% else %}
+							<span class="value"><span style="font-size: 30px;font-weight:600;">US$ {{row.price}}</span></span>
+						{% endif %}
+						
+						<span class="period">{{row.tagline}}</span>
+						
+						 {% if row.note %}
+						<span class="period" style="font-weight:bold;">{{row.note}}</span>{% endif %}
+					
+					</div>
+
+					<div class="plan-features">
+					    <p >{{row.membersip_desc | raw}}</p>
+						<a class="button href="#"
+						>{{row.action_label}}</a>
+					</div>
+				</div>
+	 {% endfor %} 
+{% endif %}
+
+
+			</div>
+		</div>
+	</div>
+	<!-- Row / End -->
+		
+</div>
+<!-- Container / End -->
+{% endblock content %}

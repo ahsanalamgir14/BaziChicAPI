@@ -1,0 +1,30 @@
+{% extends 'admin_layout.twig' %}
+{% block jstriggers %}
+<script type="text/javascript">
+ $(document).ready(function() {
+    // parseDoc();
+     //var authorization = '{{ session.api_key }}';
+    //alert("authorization: "+authorization);
+});
+</script>
+{% endblock %}
+
+
+{% block content %}
+	<!-- Overlay Section -->
+	  <div id="create_doc_overlay" style="display:none;">
+		<div id="add-listing">
+				    <div class="add-listing-section">
+						<div style="padding:60px;text-align: center;">
+					<img src="{{base_url()}}/images/preloader.gif" width="70"/>
+					<h3 style="color:#121212;margin-top:30px;"><strong>Creating {{page.doc_type}}...</strong></h3>
+					<h4 style="color:#232323;">Please wait...</h4>
+					</div>	
+					</div>	
+					</div></div>
+					<!-- Section / End -->
+				
+				
+
+{% include 'forms/add_document_form.twig' %}					
+{% endblock content %}

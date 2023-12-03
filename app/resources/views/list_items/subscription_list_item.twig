@@ -1,0 +1,43 @@
+			<li class="pending-booking">
+							<div class="list-box-listing">
+								<div class="list-box-listing-img">
+								    <a href="">
+								    <div style="margin:20px;"><h1>	<i class="sl sl-icon-badge"></i></h1></div>
+								    </a></div>
+								<div class="list-box-listing-content">
+									<div class="inner">
+										<h3>{{ data.title }} <span class="booking-status pending"></span></h3>
+{% if document.date_updated %}
+	<div class="inner-booking-list" style="margin-top:5px;">
+											<h5>Activated on </h5>
+											<ul class="booking-list">
+												<li class="highlighted">{{ data.date_updated }}</li>
+											</ul>
+										</div>
+    {% endif %}
+									
+										
+											<div class="inner-booking-list">
+											<h5>Expiring on </h5>
+											<ul class="booking-list">
+												<li class="highlighted">{{ data.date_expiring }}</li>
+											</ul>
+										</div>
+													
+										<div class="inner-booking-list">
+											<h5>Status:</h5>
+											<ul class="booking-list">
+												<li class="highlighted">{{ data.status }} </li>
+											</ul>
+										</div>
+								
+
+									</div>
+								</div>
+							</div>
+							<div class="buttons-to-right">
+							    {% if data.amount > 0 %}
+							    <a href="{{base_url()}}/invoice/{{data.txn_id}}" class="button"><i class="sl sl-icon-heart"></i> View Invoice</a>
+								{% endif %}
+							</div>
+						</li>

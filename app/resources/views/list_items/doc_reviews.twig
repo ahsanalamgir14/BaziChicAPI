@@ -1,0 +1,16 @@
+	<li>
+							<div class="avatar">
+							    {% if row.reviewer_image %}
+<img src="{{ base_url() }}/uploads/images/users/{{row.reviewer_image}}" class="img-fluid">
+{% else %}
+<img src="{{ base_url() }}/uploads/images/users/profile.png" class="img-fluid">
+{% endif %}
+
+</div><div class="comment-content"><div class="arrow-comment"></div>
+								<div class="comment-by">{{row.reviewer_name}}<span class="date">{{row.date_created}}</span>
+									<div class="star-rating" data-rating="{{row.stars}}"></div>
+								</div>
+									<!-- <p> Rated {{row.stars}}/5</p> -->
+								<blockquote>{{row.text}}</blockquote>
+							</div>
+						</li>
