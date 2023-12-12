@@ -21,7 +21,7 @@ $app->get('/apis/send-expiry-emails', function ($request, $response) {
             $subject = 'Your Membership is Expiring with in 30 days';
             $message = 'Dear ' . $user['first_name'] . ', your membership is expiring in 30 days.';
             $expiryDate = new DateTime($user['date_expiring']);
-            $formattedExpiryDate = $expiryDate->format('Y-m-d'); 
+            $formattedExpiryDate = $expiryDate->format('m-d-Y');
             $message = '
                 <html>
                 <head>
