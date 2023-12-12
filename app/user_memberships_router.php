@@ -1,4 +1,52 @@
 <?php
+
+$app->get('/apis/send-expiry-emails', function ($request, $response) {
+    require_once("dbmodels/user_membership.crud.php");
+    $membershipCRUD = new MembershipCRUD(getConnection());
+
+    try {
+        // Connect to your database and retrieve users with memberships expiring in 30 days
+        $users = $membershipCRUD->getUsersWithExpiringMemberships();
+        // return $response->withJson(['message' => 'users found', 'users' => $users]);
+        // Check if there are users
+        if (empty($users)) {
+            return $response->withJson(['message' => 'No users with expiring memberships found', 'users' => $users]);
+        } 
+
+        $helper = new Helper();
+
+        // Loop through users and send email notifications
+        foreach ($users as $user) {
+            $to = $user['email'];
+            $subject = 'Your Membership is Expiring with in 30 days';
+            $message = 'Dear ' . $user['first_name'] . ', your membership is expiring in 30 days.';
+            $expiryDate = new DateTime($user['date_expiring']);
+            $formattedExpiryDate = $expiryDate->format('Y-m-d'); 
+            $message = '
+                <html>
+                <head>
+                    <title>Subscription Expiry Notification</title>
+                </head>
+                <body>
+                    <p>Dear ' . htmlspecialchars($user['first_name']) . ',</p>
+                    <p>Your ' . htmlspecialchars($user['user_plan']) . ' subscription with BaziChic is expiring on ' . htmlspecialchars($formattedExpiryDate) . '.</p>
+                    <p>Please renew your subscription to avail continued access.</p>
+                    <p>Regards<br/>BaziChic</p>
+                </body>
+                </html>
+            ';
+            // Use a mail library or PHP's mail function to send the email
+            // Example using PHP mail function:
+            $helper->sendEmail($to, $subject, $message);
+        }
+
+        // Return the response indicating success
+        return $response->withJson(['message' => 'Emails sent successfully']);
+    } catch (Exception $e) {
+        // Handle exceptions (log it, return an error response, etc.)
+        return $response->withJson(['error' => 'An error occurred: ' . $e->getMessage()]);
+    }
+});
 /********** ASSIGN & UPDATE SUBSCRIPTION *********/
 $app->post('/subscriptions/assign', function ($request, $response, $args) use ($app) {
     require_once ("dbmodels/user_membership.crud.php");

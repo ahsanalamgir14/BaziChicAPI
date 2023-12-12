@@ -55,9 +55,9 @@ class Helper
             $mail->Host = 'bazichic.com';
             $mail->Username = 'no-reply@bazichic.com';
             $mail->Password = "xwit;!@?bW?~";
-            //$mail->SMTPSecure = 'tls';
+            $mail->SMTPSecure = 'tls';
             //$mail->SMTPSecure = 'ssl';
-            $mail->Port = 25; //465
+            $mail->Port = 587; //465
             //Other details
             $mail->Body = $body;
             $mail->AltBody = "This is an automated e-mail from BaziChic Chinese Metaphysics Consultancy.";

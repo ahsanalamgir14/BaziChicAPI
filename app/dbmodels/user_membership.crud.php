@@ -453,5 +453,23 @@ class MembershipCRUD
             return false;
         }
     }
-
+    
+    public function getUsersWithExpiringMemberships()
+    {
+        try {
+            $stmt = $this->db->prepare("
+                SELECT um.*, mp.title as user_plan, u.email, u.first_name, u.last_name
+                FROM user_memberships um
+                left JOIN membersip_plans mp ON um.plan_id = mp.id
+                left JOIN users u ON um.user_id = u.id
+                WHERE um.date_expiring = CURDATE() + INTERVAL 30 DAY
+                ANd um.status = 'Active'
+            ");
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            // Handle the exception (log it, return an empty array, etc.)
+            return $e->getMessage();
+        }
+    }
 }
