@@ -47,6 +47,251 @@ $app->get('/apis/send-expiry-emails', function ($request, $response) {
         return $response->withJson(['error' => 'An error occurred: ' . $e->getMessage()]);
     }
 });
+
+$app->post('/api/process-payment', function ($request, $response) {
+    \Stripe\Stripe::setApiKey('sk_test_51GR7jjEFRCIyd6pMzvGbGVdeArWhBerC4fZMgOmnGDhQxjmtguVpjZ1vNmcIrd9VxT6GGWoPUgDZWLZkIjXZQPrv00tzDwelP2');
+    require_once ("dbmodels/user_membership.crud.php");
+    $membershipCRUD = new MembershipCRUD(getConnection());
+    require_once ("dbmodels/user.crud.php");
+    $userCRUD = new UserCRUD(getConnection());
+    require_once ("dbmodels/transaction_details.crud.php");
+    $transactionCRUD = new PaymentCRUD(getConnection());
+    require_once ("dbmodels/utils.crud.php");
+    $utilCRUD = new UtilCRUD(getConnection());
+    require_once ("dbmodels/membership_plan.crud.php");
+    $planCRUD = new PlanCRUD(getConnection());
+    $user_id = $request->getParam('user_id');
+    $plan_id = $request->getParam('plan_id');
+    $startDate = $request->getParam('startDate');
+    $expiryDate = $request->getParam('expiryDate');
+    $amount = $request->getParam('amount');
+    $token = $request->getParam('token');
+    $mode = "Online";
+    $note = "Stripe";
+    $txn_id = "";
+    
+    if ($user_id) {
+        $user_id = $request->getParam('user_id');
+    }
+    if ($plan_id) {
+        $plan_id = $request->getParam('plan_id');
+    }
+    if ($startDate) {
+        $startDate = $request->getParam('startDate');
+    }
+    if ($expiryDate) {
+        $expiryDate = $request->getParam('expiryDate');
+    }
+    if ($amount) {
+        $amount = $request->getParam('amount');
+    }
+    if ($token) {
+        $token = $request->getParam('token');
+    }
+
+    // return $token;
+    
+    if (empty($user_id) || $user_id < 0 || empty($plan_id) || $plan_id < 0 || empty($startDate) || empty($expiryDate) || empty($amount) || $amount < 0) {
+        $output["error"] = true;
+        $output["message"] = "Invalid input data. Please check your input fields.";
+        echoRespnse(200, $output);
+    }
+    
+    $planTitle = $planCRUD->getNameByID($plan_id);
+    
+    if(!isDateFormatValid($startDate)){ 
+        $output["error"] = true;
+        $output["startDate"] = $startDate;
+        $output["message"] = "Please select valid subscription start date.";
+        echoRespnse(200, $output);
+        exit;
+    }
+    if(!isDateFormatValid($expiryDate)){
+        $output["error"] = true;
+        $output["message"] = "Please select valid subscription expiry date.";
+        echoRespnse(200, $output);
+        exit;
+    }
+    if($startDate > $expiryDate){
+        $output["error"] = true;
+        $output["message"] = "Invalid subscription expiry date.";
+        echoRespnse(200, $output);
+        exit;
+    }
+        
+    if (strpos($startDate, ' ') == false) {
+        $startDate = $startDate." 00:00:00";
+    }
+    if (strpos($expiryDate, ' ') == false) {
+        $expiryDate = $expiryDate." 00:00:00";
+    }
+    if (!empty($txn_id)) {
+        if (null !== $request->getParam('id')) {
+        }else{
+            if ($transactionCRUD->doesTXNExists($txn_id)) {
+                $output["error"] = true;
+                $output["message"] = "Same transaction ID already exists.";
+                echoRespnse(200, $output);
+                exit;
+            } 
+        }
+    }else{
+        $txn_id = $utilCRUD->generateTXNID(10);
+    }
+    if (empty($mode)) {
+        $output["error"] = true;
+        $output["message"] = "Please select the mode of payment.";
+        echoRespnse(200, $output);
+        exit;
+    }
+    
+    $subscriptionID = 0;
+    $membershipInfo = "";
+    $update = false;
+    if (null !== $request->getParam('id')) {
+        $subscriptionID = $request->getParam('id');
+        if (empty($subscriptionID) || $subscriptionID < 0) {
+            $output["error"] = true;
+            $output["message"] = "Please select a valid subscription ID.";
+            echoRespnse(200, $output);
+            exit;
+        }
+        //Check in database if this ID exists
+        if ($membershipCRUD->isIDExists($subscriptionID)) {
+			$membershipInfo = $membershipCRUD->getID($subscriptionID);
+            $update = true;
+        } else {
+            $output["error"] = true;
+            $output["message"] = "Could not retrieve subscription details.";
+            echoRespnse(200, $output);
+            exit;
+        }
+    }
+    $user_email = $userCRUD->getEmail($user_id);
+    $userData = $userCRUD->getUserByEmail($user_email);
+    $txnStatus = "Completed";
+    
+    $date_updated = date('Y-m-d H:i:s');
+    if ($update) {
+        try {
+            // Create a charge using the Stripe API
+            $charge = \Stripe\Charge::create([
+                'amount' =>  $amount * 100,
+                'currency' => 'usd',
+                'description' => 'Payment for your product or service',
+                'source' => $token, // obtained with Stripe.js
+            ]);
+    
+            // Charge was successful, return a success response
+            // return $response->withJson(['message' => 'Payment successful', 'charge' => $charge]);
+        } catch (\Stripe\Exception\CardException $e) {
+            // Card was declined, return an error response
+            return $response->withJson(['error' => $e->getMessage()], 400);
+        } catch (\Stripe\Exception\RateLimitException | \Stripe\Exception\InvalidRequestException | \Stripe\Exception\AuthenticationException | \Stripe\Exception\ApiConnectionException | \Stripe\Exception\Base $e) {
+            // Other Stripe-related errors, return an error response
+            return $response->withJson(['error' => $e->getMessage()], 500);
+        }
+        $res = $membershipCRUD->update($subscriptionID, $user_id, $plan_id, $startDate, $expiryDate, $amount, "Active", $note, $date_updated);
+        if (!$res["error"]) {
+            $output["error"] = false;
+            $output["message"] = "Subscription has been updated successfully.";
+
+            //Also update the transaction details
+            if (null !== $request->getParam('hasTransactionDetail')) {
+                $hasTransactionDetail = $request->getParam('hasTransactionDetail');
+                try {
+                    $transRowID = $transactionCRUD->getRowIDByRefCode($membershipInfo["qcode"]);
+                    $output["transactionRowID"] = $transRowID;
+                    if(!empty($transRowID) && is_numeric($transRowID)){
+					$transResult = $transactionCRUD->update($transRowID, $txn_id, $mode, $note);
+                    if (!$transResult["error"]) {
+                        $output["message"] .= " Transaction details have been updated. ";
+                        $output["qcode"] = $membershipInfo["qcode"];
+                    }
+				   }else{
+                        //Create new transaction if not exists
+                        try {
+                            $transResult = $transactionCRUD->create($user_id, $user_email, "", $planTitle, $membershipInfo["qcode"], $amount, "USD", $txn_id, $txn_id, $txnStatus, $txnStatus, $note, $mode);
+                            if (!$transResult["error"]) {
+                                $output["message"] .= " Transaction details have been updated. ";
+                            }
+                        } catch (Exception $e) {
+                            $output["message"] .= " Error saving transaction details. ";
+                        }
+
+                        //Notify by e-mail
+                        try {
+                            notifyUserOfNewSubscription($user_email, $userData["firstName"], $planTitle, $startDate, $expiryDate, $qcode);
+                        } catch  (Exception $e) {
+                            $output["debug"] = " Error sending e-mail notification for new subscription. ";
+                        }
+                   }
+                } catch (Exception $e) {
+                    $output["message"] .= " Error saving transaction details. ";
+                }
+            }
+            echoRespnse(200, $output);
+        } else {
+            $output["error"] = true;
+            $output["message"] = "Failed to update Subscription. Please try again.";
+            echoRespnse(200, $output);
+        }
+    } else {
+        try {
+            // Create a charge using the Stripe API
+            $charge = \Stripe\Charge::create([
+                'amount' =>  $amount * 100,
+                'currency' => 'usd',
+                'description' => 'Payment for your product or service',
+                'source' => $token, // obtained with Stripe.js
+            ]);
+    
+            // Charge was successful, return a success response
+            // return $response->withJson(['message' => 'Payment successful', 'charge' => $charge]);
+        } catch (\Stripe\Exception\CardException $e) {
+            // Card was declined, return an error response
+            return $response->withJson(['error' => $e->getMessage()], 400);
+        } catch (\Stripe\Exception\RateLimitException | \Stripe\Exception\InvalidRequestException | \Stripe\Exception\AuthenticationException | \Stripe\Exception\ApiConnectionException | \Stripe\Exception\Base $e) {
+            // Other Stripe-related errors, return an error response
+            return $response->withJson(['error' => $e->getMessage()], 500);
+        }
+        $qcode = $membershipCRUD->generateCode();
+        $res = $membershipCRUD->create($user_id, $plan_id, $startDate, $expiryDate, $amount, "Active", $qcode, $note);
+        if (!$res["error"]) {
+            $output["error"] = false;
+            $output["message"] = "New subscription has been assigned successfully.";
+            $output["expiryDate"] = $expiryDate;
+            $output["startDate"] = $startDate;
+            $output["id"] = $res["id"];
+            $output["qcode"] = $qcode;
+            $output["user_name"] = $userCRUD->getUsernameByID($user_id);
+            /********** CREATE NEW TXN ENTRY *********/
+            try {
+                $transResult = $transactionCRUD->create($user_id, $user_email, "", $planTitle, $qcode, $amount, "USD", $txn_id, $txn_id, $txnStatus, $txnStatus, $note, $mode);
+                if (!$transResult["error"]) {
+                    $output["message"] .= " Transaction details have been updated. ";
+                }
+            } catch (Exception $e) {
+                $output["message"] .= " Error saving transaction details. ";
+            }
+
+            //Notify by e-mail
+            try {
+                notifyUserOfNewSubscription($user_email, $userData["first_name"], $planTitle, $startDate, $expiryDate, $qcode);
+            } catch  (Exception $e) {
+                $output["debug"] = " Error sending e-mail notification for new subscription. ";
+            }
+
+            echoRespnse(200, $output);
+        } else {
+            $output["error"] = true;
+            $output["moreInfo"] = $res["msg"];
+            $output["message"] = "Failed to assign Subscription. Please try again.";
+            echoRespnse(200, $output);
+        }
+    }
+})->add($authenticate);
+
 /********** ASSIGN & UPDATE SUBSCRIPTION *********/
 $app->post('/subscriptions/assign', function ($request, $response, $args) use ($app) {
     require_once ("dbmodels/user_membership.crud.php");
