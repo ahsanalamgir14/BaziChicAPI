@@ -48,6 +48,76 @@ $app->get('/apis/send-expiry-emails', function ($request, $response) {
     }
 });
 
+function registerUser($data) {
+    require_once ("dbmodels/user.crud.php");
+    require_once 'dbmodels/PassHash.php';
+    $userCRUD = new UserCRUD(getConnection());
+    $response = array();
+    $response["error"] = true;
+
+    try {
+        $first_name = $data["first_name"];
+        $last_name = $data["last_name"];
+        $user_name = $data["user_name"];
+        $type = $data["type"];
+        $phone = $data["phone"];
+        $email = $data["email"];
+        $password = PassHash::hash($data["password"]);
+        $dob = $data["dob"];
+        $country = $data["country"];
+        $description = $data["description"];
+        $date_created = $data["date_created"];
+        $status = $data["status"];
+        $role_id = $data["role_id"];
+        $ref_user_id = $data["ref_user_id"];
+        $referral_code = $data["referral_code"];
+        $api_key = $data["api_key"];
+
+        if (!$userCRUD->isEmailRegistered($email)) {
+            $stmt = $userCRUD->getDb()->prepare("INSERT INTO users(first_name, last_name, user_name, type, phone, email, password, dob, country, description, date_created, status, role_id, ref_user_id, referral_code, api_key) VALUES(:first_name, :last_name, :user_name, :type, :phone, :email, :password, :dob, :country, :description, :date_created, :status, :role_id, :ref_user_id, :referral_code, :api_key)");
+            $stmt->bindparam(":first_name", $first_name);
+            $stmt->bindparam(":last_name", $last_name);
+            $stmt->bindparam(":user_name", $user_name);
+            $stmt->bindparam(":type", $type);
+            $stmt->bindparam(":phone", $phone);
+            $stmt->bindparam(":email", $email);
+            $stmt->bindparam(":password", $password);
+            $stmt->bindparam(":dob", $dob);
+            $stmt->bindparam(":country", $country);
+            $stmt->bindparam(":description", $description);
+            $stmt->bindparam(":date_created", $date_created);
+            $stmt->bindparam(":status", $status);
+            $stmt->bindparam(":role_id", $role_id);
+            $stmt->bindparam(":ref_user_id", $ref_user_id);
+            $stmt->bindparam(":referral_code", $referral_code);
+            $stmt->bindparam(":api_key", $api_key);
+
+            if ($stmt->execute()) {
+                $response["error"] = false;
+                $response["id"] = $userCRUD->getDb()->lastInsertId();
+                $response["code"] = INSERT_SUCCESS;
+                $response["userName"] = $user_name;
+                $response["message"] = "Great! You are now a registered member.";
+            } else {
+                $response["error"] = true;
+                $response["message"] = "Oops! An error occurred while registering. Try again.";
+                $response["code"] = INSERT_FAILURE;
+            }
+        } else {
+            $response["error"] = true;
+            $response["message"] = "Looks like you are already registered.";
+            $response["code"] = ALREADY_EXIST;
+        }
+
+        return $response;
+    } catch (PDOException $e) {
+        $response["error"] = true;
+        $response["message"] = "Exception happened." . $e->getMessage();
+        echo $e->getMessage();
+        return $response;
+    }
+}
+
 $app->post('/api/process-payment', function ($request, $response) {
     \Stripe\Stripe::setApiKey('sk_test_51GR7jjEFRCIyd6pMzvGbGVdeArWhBerC4fZMgOmnGDhQxjmtguVpjZ1vNmcIrd9VxT6GGWoPUgDZWLZkIjXZQPrv00tzDwelP2');
     require_once ("dbmodels/user_membership.crud.php");
@@ -69,8 +139,40 @@ $app->post('/api/process-payment', function ($request, $response) {
     $mode = "Online";
     $note = "Stripe";
     $txn_id = "";
+
+    $registrationData = [
+        'first_name' => $request->getParam('first_name'),
+        'last_name' => $request->getParam('last_name'),
+        'email' => $request->getParam('email'),
+        'user_name' => $utilCRUD->createNewUsername(8),
+        'type' => 'Customer',
+        'phone' => '',
+        'password' => $request->getParam('password'),
+        'dob' => '',
+        'country' => '',
+        'description' => '',
+        'date_created' => '',
+        'status' => 'Active',
+        'role_id' => 2,
+        'ref_user_id' => '',
+        'referral_code' => '',
+        'api_key' => $utilCRUD->generateApiKey()
+    ];
+
+    if (!empty($registrationData['email'])) {
+        // Call the user registration function
+        $res = registerUser($registrationData);
+        if(!$res['error']) {
+            $user_id = $res['id'];
+        } else {
+            $output["error"] = true;
+            $output["message"] = $res['message'];
+            echoRespnse(200, $output);
+            exit;
+        }
+    }
     
-    if ($user_id) {
+    if ($user_id && empty($registrationData['email'])) {
         $user_id = $request->getParam('user_id');
     }
     if ($plan_id) {
@@ -168,6 +270,8 @@ $app->post('/api/process-payment', function ($request, $response) {
         }
     }
     $user_email = $userCRUD->getEmail($user_id);
+    // echoRespnse(200, $user_id);
+    // exit;
     $userData = $userCRUD->getUserByEmail($user_email);
     $txnStatus = "Completed";
     
@@ -290,7 +394,7 @@ $app->post('/api/process-payment', function ($request, $response) {
             echoRespnse(200, $output);
         }
     }
-})->add($authenticate);
+});
 
 /********** ASSIGN & UPDATE SUBSCRIPTION *********/
 $app->post('/subscriptions/assign', function ($request, $response, $args) use ($app) {

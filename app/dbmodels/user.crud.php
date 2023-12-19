@@ -2,11 +2,15 @@
 require_once "Constants.php";
 class UserCRUD
 {
-    private $db;
+    public $db;
 
     public function __construct($DB_con)
     {
         $this->db = $DB_con;
+    }
+
+    public function getDb() {
+        return $this->db;
     }
 
     public function register($first_name, $last_name, $user_name, $type, $phone, $email, $password, $dob, $country, $description, $date_created, $status, $role_id, $ref_user_id, $referral_code, $api_key)
@@ -576,5 +580,287 @@ class UserCRUD
      $stmt->execute();
      $editRow=$stmt->fetchAll();
      return $editRow;
+    }
+
+    public function registerUser($registrationData)
+    {
+        require_once ("dbmodels/user.crud.php");
+        require_once 'dbmodels/PassHash.php';
+        require_once 'dbmodels/utils.crud.php';
+        require_once ("dbmodels/referral.crud.php");
+        require_once ("dbmodels/notification.crud.php");
+        require_once ("dbmodels/activity.crud.php");
+        require_once ("dbmodels/user_membership.crud.php");
+        require_once ("dbmodels/reward_points.crud.php");
+        $helper = new Helper();
+        $membershipCRUD = new MembershipCRUD(getConnection());
+        $referralCRUD = new ReferralCRUD(getConnection());
+        $notiCRUD = new NotificationCRUD(getConnection());
+        $activityCRUD = new ActivityCRUD(getConnection());
+        $referralCRUD = new ReferralCRUD(getConnection());
+        $rewardPointCRUD = new RewardPointCRUD(getConnection());
+        $utilCRUD = new UtilCRUD(getConnection());
+        $userCRUD = new UserCRUD(getConnection());
+        $output = array();
+        $output["note"] = "";
+        // reading post parameters
+        $adminMode = false;
+        $first_name = "";
+        $last_name = "";
+        $email = "";
+        $dob = "";
+        $country = "";
+        $referral_code = "";
+        $ref_user_id = 0;
+        $type = "Customer";
+        $source = "";
+        if (null !== $request->getParam('first_name')) {
+            $first_name = $request->getParam('first_name');
+        }
+        if (null !== $request->getParam('last_name')) {
+            $last_name = $request->getParam('last_name');
+        }
+        if (null !== $request->getParam('email')) {
+            $email = $request->getParam('email');
+        }
+        if (null !== $request->getParam('dob')) {
+            $dob = $request->getParam('dob');
+        }
+        if (null !== $request->getParam('country')) {
+            $country = $request->getParam('country');
+        }
+        if (null !== $request->getParam('referral_code')) {
+            $referral_code = $request->getParam('referral_code');
+        }
+    
+        if (!empty($referral_code)) {
+            $ref_user_id = $referralCRUD->getUserID($referral_code);
+        }
+        if (null !== $request->getParam('type')) {
+            $type = $request->getParam('type');
+        }
+        if (null !== $request->getParam('adminMode')) {
+            $adminMode = true;
+        }
+
+        if (empty($first_name)) {
+            $output["error"] = true;
+            $output["message"] = "First name can not be empty.";
+            echoRespnse(200, $output);
+            exit;
+        }
+
+        if (empty($last_name)) {
+            $output["error"] = true;
+            $output["message"] = "Please enter a last name.";
+            echoRespnse(200, $output);
+            exit;
+        }
+
+        if (empty($email)) {
+            $output["error"] = true;
+            $output["message"] = "Let us know your e-mail address.";
+            echoRespnse(200, $output);
+            exit;
+        }
+
+        if (empty($dob)) {
+            $output["error"] = true;
+            $output["message"] = "Let us know your birth date.";
+            echoRespnse(200, $output);
+            exit;
+        }
+        if(!isDateFormatValid($dob)){
+            $output["error"] = true;
+            $output["dob"] = $dob;
+            $output["test1"] = isDateTimeFormatValid($dob);
+            $output["test2"] = isDateFormatValid($dob);
+            $output["message"] = "Please select valid date of birth.";
+            echoRespnse(200, $output);
+            exit;
+        }
+
+        if (empty($country)) {
+            $output["error"] = true;
+            $output["message"] = "Select the country of your residence.";
+            echoRespnse(200, $output);
+            exit;
+        }
+        if (null !== $request->getParam('source')) {
+            $source = $request->getParam('source');
+        }
+        if (null !== $request->getParam('autogen_pass') && $request->getParam('autogen_pass') == true) {
+            $password = $utilCRUD->createNewUsername(8);
+        } else {
+            $password = "";
+            $confirmPassword = "";
+            $password = $request->getParam('password');
+            $confirmPassword = $request->getParam('confirmPassword');
+            if (empty($password)) {
+                $output['error'] = true;
+                $output['message'] = 'Please set a password for this account.';
+                echoRespnse(200, $output);
+                return;
+            }
+            if (strlen($password) < 6) {
+                $output['error'] = true;
+                $output['message'] = 'Your password must be at least 6 characters. Please enter a strong password.';
+                echoRespnse(200, $output);
+                return;
+            }
+            if (empty($confirmPassword)) {
+                $output['error'] = true;
+                $output['message'] = 'Please repeat your password.';
+                echoRespnse(200, $output);
+                return;
+            }
+            if (strlen($confirmPassword) < 6) {
+                $output['error'] = true;
+                $output['message'] = 'Your password must be at least 6 characters. Please review the repeated password.';
+                echoRespnse(200, $output);
+                return;
+            }
+            if ($password !== $confirmPassword) {
+                $output['error'] = true;
+                $output['message'] = 'Your password did not match.';
+                echoRespnse(200, $output);
+                return;
+            }
+        }
+        $phone = "";
+        $status = "Pending";
+        $date_created = date('Y-m-d H:i:s');
+        $role_id = 2;
+        $description = "";
+        $password_hash = PassHash::hash($password);
+        $api_key = $utilCRUD->generateApiKey();
+        $user_name = $utilCRUD->createNewUsername(8);
+        $res = $userCRUD->register($first_name, $last_name, $user_name, $type, $phone, $email, $password_hash, $dob, $country, $description, $date_created, $status, $role_id, $ref_user_id, $referral_code, $api_key);
+        if ($res["code"] == INSERT_SUCCESS) {
+            $output["error"] = false;
+            if($adminMode){
+                $output["message"] = "New account for ".$first_name." ".$last_name." has been created successfully.";
+            }else{
+                $output["message"] = "Your new account has been created successfully.";
+            }
+            if(!empty($source)){
+                $userCRUD->updateRegSource($source);
+            }
+            $user_id = $res["id"];
+            $output["id"] = $user_id;
+            $output["user_name"] = $user_name;
+
+            /********* FOR WEB ***********/
+            $userData = getUserBasicDetails($user_id);
+            $output['userData'] = $userData;
+            /********* Notify now and send email ********/
+            try {
+                $title = 'Welcome to BaziChic';
+                $message = 'Hi ' . $first_name . '! Thanks for registering your account with BaziChic.';
+                $noti_res = $notiCRUD->create(1, $user_id, $title, $message, $user_name, $data_title = "WelcomeSelf", $status = "Pending", $date_created);
+                if ($noti_res["code"] == INSERT_SUCCESS) {
+                    $output["note"] .= " Notified successfully.";
+                }
+
+                /********* EMAIL NOTIFICATION **********/
+                if (null !== $request->getParam('notify_account')) {
+                    $subject = "Welcome to BaziChic";
+                    $body = '<h4>Welcome  ' . $first_name . '!</h4>';
+                    if (null !== $request->getParam('moderator')) {
+                        $body .= '<h4>A new account has been registered for you at BaziChic.</h4>';
+                    } else {
+                        $body .= '<h4>Your new BaziChic account has been created successfully. Thanks for registering an account with us.</h4>';
+                    }
+                    $body .= '<h4>Use the autogenerated password - ' . $password . ' to access your account. Please update your password to keep the account safe once you verify your registered e-mail. </h4>';
+                    $body .= '<br>';
+                    $body .= getEmailFooter();
+                    $emailResult = $helper->sendEmail($email, $subject, $body);
+                    if (!$emailResult["error"]) {
+                        $output["message"] .= " We have sent further instructions to your registered email address.";
+                    } else {
+                        //$output["message"] = "";
+                    }
+                }
+                /********* EMAIL SENT **********/
+
+            } catch (Exception $e) {
+                $output["note"] .= " Error notifying." . $e->getMessage();
+            }
+            /********* Notify Done ********/
+
+            /**** Log Activity ********/
+            try {
+                $title = "New Registration - " . $first_name . " " . $last_name;
+                $activity = $first_name . " " . $last_name . " from " . $country . " registered an account.";
+                $activity_res = $activityCRUD->create(1, $title, $activity, $user_name, $data_title = "Registration", 0, $date_created);
+                if ($activity_res["code"] == INSERT_SUCCESS) {
+                    $output["note"] .= " Logged new accunt activity.";
+                }} catch (Exception $e) {
+                $output["note"] .= "Error logging activity. " . $e->getMessage();
+            }
+            /**** Log Activity ********/
+
+            /******* Send OTP *******/
+            try{
+                $newOtp = $utilCRUD->generateNewOTP();	
+                $emailToName = $first_name." ".$last_name;
+                notifyUserWithVerificationCode($email, $emailToName, $newOtp, 0);
+            }catch(Exception $e)
+            {
+            $output["verifier"] = "Error sending verification e-mail: " . $e->getMessage();
+            }
+            /**************/
+
+            /********** PROCESS REFERRAL ***********/
+            try {
+                if (is_numeric($ref_user_id) && $ref_user_id > 0) {
+                    if ($referralCRUD->isReferralCodeExist($referral_code)) {
+                        //Update Referral
+                        $ref_user_id = $referralCRUD->getUserID($referral_code);
+                        $date_updated = date('Y-m-d H:i:s');
+                        $referralCRUD->updateReferral($referral_code, $status = "Used", $date_updated);
+                        $userCRUD->updateFather($user_id, $ref_user_id);
+                        $referredUser = $userCRUD->getNameByID($user_id);
+                        $referringUser = $userCRUD->getNameByID($ref_user_id);
+                        $output['message'] .= ' The Referral Code has been applied.';
+                        $output["note"] .= "Referrals Updated.";
+                        $ref_message = "Your referral code " . $referral_code . " from " . $referringUser . " has been applied successfully.";
+                        //Notify New User
+                        if (!empty($referredUser)) {
+                            $notiCRUD->create($ref_user_id, $user_id, "Referral Code Applied", $ref_message, $user_id, $data_title = "ReferralApplied", $status = "Pending", $date_created);
+                            $output["note"] .= " Referred user Notified. ";
+                        }
+                        //Notify Referrering User
+                        if (!empty($referringUser)) {
+                            $con_message = "Congrats! You have a new connection. " . $referredUser . " just used your referral code to register an account.";
+                            $notiCRUD->create($user_id, $ref_user_id, "New Connection", $con_message, $user_id, $data_title = "ReferralApplied", $status = "Pending", $date_created);
+                            $output["note"] .= " Referring User notified.";
+                        }
+                        //Process Reward Points
+                        $note = $referredUser . " registered a new account using code " . $referral_code . ".";
+                        $rewarding_res = $rewardPointCRUD->create($ref_user_id, $points = 5, "Refferal Bonus", $note, "Complete", $date_created);
+                        if ($rewarding_res["code"] == INSERT_SUCCESS) {
+                            $output["note"] .= " Reward point processed successfully.";
+                        } else {
+                            $output["note"] .= " Failed to process Reward point. " . $rewarding_res["msg"];
+                        }
+                    } else {
+                        //$output['error'] = true;
+                        $output['message'] .= 'The Referral Code you applied was invalid.';
+                        $output["note"] .= "Invalid Referral Code.";
+                    }
+                }
+            } catch (Exception $e) {
+                $output["note"] .= " ERROR DURING REFERRAL PROCESS: " . $e->getMessage();
+            }
+            /********** REFERRAL PROCESSED ***********/
+
+        } else if ($res["code"] == INSERT_FAILURE) {
+            $output["error"] = true;
+            $output["message"] = "Oops! An error occurred while registering user";
+        } else if ($res["code"] == ALREADY_EXIST) {
+            $output["error"] = true;
+            $output["message"] = "The email is already registered.";
+        }
     }
 }
